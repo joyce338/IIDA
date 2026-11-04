@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="IIDA Cornell A&amp;D Student Firm Crawl: visit an Ithaca design firm.">
+<title>Ithaca Firm Crawl 2026</title>
+<style>
+/* Layout: plain white sheet with hairline rules and Helvetica, like a card-game site. One color per firm: pink, green, orange, yellow. Dots drift behind the hero; firm cards fan out beside the intro. */
+:root{
+  color-scheme:light;
+  --paper:#FFFFFF;
+  --ink:#141414;
+  --soft:#605E5A;
+  --line:#141414;
+  --hair:#E4E2DE;
+  --tint:#F5F4F1;
+  --pink:#F49AC1;
+  --green:#1E8A47;
+  --orange:#FF6B2C;
+  --yellow:#F7C618;
+  --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --cur-arrow:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAADeB1slAAAAnklEQVR42tXWSw6AIAwE0NF4hPb+B4Q74GpckCh+KIxdmYhxHgUFZlbMrCCoVgTX8YIoSbhg40VKCQDg7gUAcs7LvwRRkvGC3pJ5gl6S+YKvEh3BW4me4KlEV3BXoi9oSXQF7n55n//3+QIm5RzXpbuTmZwJuToo0d3JdXL5c9FSn0dbyTm+XlVn8nE96DXn43vw9sG7vdAXtL5N4YIdiDhzAxhDwjMAAAAASUVORK5CYII=) 0 0;
+  --cur-hand:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAkCAYAAADo6zjiAAAAo0lEQVR42u2XUQ7AEAyGWXYE7n9AvYM9NTEhXay0Ff8bIeprteodoRBCLscA4B2jLicsT908pfSajzGykhAncAw4BtyjG7nyg10CjfyQW+soMnYJjJKpicgTmF3tajJIBM/REwO1hV99TM3bywMFiSmvQh8BjEb0/agv96uGq0joISAVC/tVw556/YQ+AqtjQW9vSPWIf31/GhN7eYDrf6COwANekFg8U8O4LgAAAABJRU5ErkJggg==) 9 1;
+  --cur-grab:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeCAYAAABNChwpAAAAjklEQVR42u2WUQrAIAiGKzpC3v+AdYf2JLSB2Fyk2/zf+gnST8VCcLn+rshdKKX08dxaixKfUjJLADOptZ58AAgSnyKiTiDvegjJAEAfSdghcO1eLpNZn5M+Aa7bV9XeLgFp5KukTwDnEedzV+Z2dwE1FU+FU2V/F+zuifSaH5GUBFV7MwQ8gHy3lp8jcACUCUxAnQ8u3AAAAABJRU5ErkJggg==) 16 12;
+}
+*{box-sizing:border-box}
+html{cursor:var(--cur-arrow),auto;scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5;cursor:var(--cur-arrow),auto;-webkit-font-smoothing:antialiased}
+a,button,.chip,.pin,.card{cursor:var(--cur-hand),pointer}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;padding:0}
+button:disabled{cursor:var(--cur-arrow),not-allowed}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.025em;line-height:1;text-wrap:balance}
+p{margin:0}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.small{font-size:.8rem;letter-spacing:.01em}
+.c-pink{--c:var(--pink);--on:var(--ink)}.c-green{--c:var(--green);--on:#fff}.c-orange{--c:var(--orange);--on:var(--ink)}.c-yellow{--c:var(--yellow);--on:var(--ink)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;background:var(--ink);color:var(--paper)}
+.hero .bar{border-color:rgba(255,255,255,.28)}
+.hero .quick{border-top-color:rgba(255,255,255,.4)}
+.hero .btn{background:transparent;color:var(--paper);border-color:var(--paper)}
+.hero .btn:hover{background:var(--paper);color:var(--ink)}
+.hero .btn.solid{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.hero .btn.solid:hover{background:var(--paper);border-color:var(--paper)}
+.hero .hint{color:rgba(255,255,255,.6);font-weight:400}
+.hero .bar.bottom{border-top-color:rgba(255,255,255,.28)}
+.hero .intro{position:relative;background:linear-gradient(140deg,rgba(255,255,255,.14),rgba(255,255,255,.04) 45%,rgba(255,255,255,.07));-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:clamp(22px,3vw,36px);pointer-events:auto;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 24px 60px -24px rgba(0,0,0,.9)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.hero .intro{background:rgba(40,40,40,.92)}}
+.hero .intro .lede{color:#F2F1EE}
+.hero .card-in{box-shadow:0 0 0 1px rgba(255,255,255,.1),0 18px 40px -12px rgba(0,0,0,.8)}
+#confetti{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bar{position:relative;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding-block:14px;border-bottom:1.5px solid var(--line)}
+.bar>:nth-child(2){font-weight:700;font-size:1.05rem;text-align:center}
+.bar>:last-child{justify-self:end}
+.bar a{text-decoration:none}
+.bar a:hover{text-decoration:underline;text-underline-offset:3px}
+.hero-in{position:relative;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:48px;align-items:center;padding-block:56px 64px;pointer-events:none}
+.hero-in a,.hero-in button{pointer-events:auto}
+.intro{display:flex;flex-direction:column;gap:22px;min-width:0}
+.intro h1{font-size:clamp(2.6rem,5vw,4.4rem);letter-spacing:-.04em;line-height:.92}
+.intro .lede{font-size:1.18rem;max-width:34ch}
+.quick{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 18px;margin:0;font-size:.98rem;border-top:1.5px solid var(--line);padding-top:16px;max-width:420px}
+.quick dt{font-weight:700}
+.quick dd{margin:0}
+.ctas{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;border:1.5px solid var(--ink);background:var(--paper);text-decoration:none;font-weight:700;font-size:.98rem;transition:background .15s,color .15s}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn.solid{background:var(--ink);color:var(--paper)}
+.btn.solid:hover{background:var(--paper);color:var(--ink)}
+
+/* fanned deck */
+.deck{position:relative;height:clamp(330px,36vw,440px);pointer-events:auto}
+/* .card is a fixed hit area; only .card-in moves, so the hover never flickers */
+.card{--w:clamp(170px,19vw,232px);position:absolute;bottom:18px;left:calc(var(--i) * (100% - var(--w)) / 3);width:var(--w);aspect-ratio:3/4.2;max-width:100%;display:block;text-decoration:none;transform:rotate(var(--r));z-index:var(--z)}
+.card-in{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--paper);color:var(--ink);border-radius:12px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.08),0 14px 30px -10px rgba(0,0,0,.3);transition:transform .3s ease-out,translate .3s ease-out}
+.art{position:relative;flex:1;background:var(--c);overflow:hidden}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;filter:grayscale(1) contrast(1.15) brightness(1.05);transition:filter .3s,transform .4s}
+.lbl{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:10px 13px 12px;border-top:1px solid rgba(0,0,0,.12);min-height:60px}
+.lbl b{font-size:1.02rem;line-height:1.15;letter-spacing:-.01em;order:2}
+.lbl span{font-size:.75rem;color:var(--soft);white-space:nowrap;order:1}
+.card:hover,.card:focus-visible{z-index:9}
+.card:hover .card-in,.card:focus-visible .card-in{transform:translateY(-30px) rotate(calc(var(--r) * -1))}
+.card:hover .art img,.card:focus-visible .art img{mix-blend-mode:normal;filter:none;transform:scale(1.05)}
+.card:hover ~ .card .card-in{translate:24px 0}
+@media (prefers-reduced-motion:no-preference){
+  .card{animation:deal .8s cubic-bezier(.3,1.3,.5,1) both;animation-delay:calc(var(--i) * 90ms)}
+  @keyframes deal{from{translate:calc(var(--i) * -60px) 14px}to{translate:0 0}}
+}
+.bar.bottom{border-bottom:0;border-top:1.5px solid var(--line)}
+
+/* ---------- sections ---------- */
+section{scroll-margin-top:16px}
+.sec{padding-block:88px 16px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:16px 40px;flex-wrap:wrap;margin-bottom:32px;padding-bottom:16px;border-bottom:1.5px solid var(--line)}
+h2{font-size:clamp(2.4rem,5.4vw,4.2rem);letter-spacing:-.04em}
+.sec-head p{max-width:44ch;color:var(--soft)}
+
+/* matcher */
+.matcher{display:flex;flex-direction:column;gap:12px;margin-bottom:64px}
+.matcher-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.matcher h3{font-size:1.25rem;letter-spacing:-.01em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 15px;border-radius:999px;border:1.5px solid var(--ink);background:var(--paper);font-size:.95rem;transition:background .15s,color .15s}
+.chip:hover{background:var(--tint)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.result{min-height:1.6em}
+.result a{display:inline-block;padding:1px 10px;border-radius:999px;background:var(--c);color:var(--on);text-decoration:none;font-weight:700;margin-right:4px}
+.clear{font-size:.9rem;text-decoration:underline;text-underline-offset:3px}
+
+/* firm blocks */
+.firms{display:flex;flex-direction:column}
+.firm{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:48px;align-items:start;padding-block:48px;border-top:1px solid var(--hair);transition:opacity .3s}
+.firm:first-child{border-top:0;padding-top:0}
+.firm.dim{opacity:.3}
+.firm.hit .match{display:inline-flex}
+.info{display:flex;flex-direction:column;gap:18px;min-width:0}
+.firm-top{display:flex;gap:14px;align-items:center}
+.num{flex:none;width:44px;height:44px;border-radius:50%;background:var(--c);color:var(--on);display:grid;place-items:center;font-weight:700;font-size:1.1rem}
+.firm h3{font-size:clamp(1.8rem,3.2vw,2.5rem);letter-spacing:-.035em}
+.match{display:none;align-self:flex-start;background:var(--c);color:var(--on);padding:3px 11px;border-radius:999px;font-size:.82rem;font-weight:700}
+.about{display:flex;flex-direction:column;gap:12px}
+dl.facts{margin:0}
+.facts div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:9px 0;border-top:1px solid var(--hair);font-size:.95rem}
+.facts div:last-child{border-bottom:1px solid var(--hair)}
+.facts dt{color:var(--soft)}
+.facts dd{margin:0}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.links a{padding:9px 16px;border-radius:999px;text-decoration:none;font-weight:700;font-size:.95rem;border:1.5px solid var(--ink);transition:background .15s,color .15s}
+.links a:first-child{background:var(--c);color:var(--on);border-color:var(--c)}
+.links a:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tba{font-size:.88rem;color:var(--soft)}
+
+.gallery{min-width:0}
+.frame{position:relative;aspect-ratio:5/4;max-width:100%;overflow:hidden;border-radius:12px;background:var(--c)}
+.slide{position:absolute;inset:0;margin:0;opacity:0;transition:opacity .6s ease}
+.slide.on{opacity:1}
+.slide img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.04);transition:transform 6s ease}
+.slide.on img{transform:scale(1)}
+.g-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}
+.cap{font-size:.92rem;color:var(--soft)}
+.cap b{color:var(--ink)}
+.g-ctrl{display:flex;align-items:center;gap:6px;flex:none}
+.g-dot{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--ink);transition:background .2s}
+.g-dot[aria-current="true"]{background:var(--c);border-color:var(--c)}
+.g-arrow{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;transition:background .15s,color .15s}
+.g-arrow:hover{background:var(--ink);color:var(--paper)}
+
+/* map */
+.mapwrap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;align-items:start}
+.mapbox{position:relative;aspect-ratio:1/1;max-width:100%;border-radius:12px;overflow:hidden;background:#F3F2EE;border:1px solid var(--hair);touch-action:none;cursor:var(--cur-grab),grab}
+.mapbox.dragging{cursor:var(--cur-grab),grabbing}
+.mapbox svg{width:100%;height:100%;display:block}
+.m-campus{fill:#ECEAE4}
+.m-water{fill:#D3E4F2}
+.m-river{fill:none;stroke:#D3E4F2;stroke-width:3;vector-effect:non-scaling-stroke}
+.m-minor{fill:none;stroke:#FFFFFF;stroke-width:1.6;vector-effect:non-scaling-stroke}
+.m-mid{fill:none;stroke:#FFFFFF;stroke-width:3.2;vector-effect:non-scaling-stroke}
+.m-major{fill:none;stroke:#D7D3CB;stroke-width:4.5;vector-effect:non-scaling-stroke}
+.m-label{font-family:var(--sans);font-weight:700;fill:#8A8780;letter-spacing:.04em;text-transform:uppercase;paint-order:stroke;stroke:#F3F2EE;stroke-width:3px}
+.m-label.water{fill:#6E92B3}
+.pin .ring{fill:none;stroke:var(--c);stroke-width:3;opacity:0;transform-box:fill-box;transform-origin:center}
+.pin.on .ring{opacity:1}
+@media (prefers-reduced-motion:no-preference){.pin.on .ring{animation:pulse 1.6s ease-out infinite}@keyframes pulse{from{transform:scale(.8);opacity:.9}to{transform:scale(1.9);opacity:0}}}
+.pin .body{fill:var(--c);stroke:var(--ink);stroke-width:1.5}
+.pin text{font-family:var(--sans);font-weight:700;font-size:16px;fill:var(--on);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.mapctl{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.mapctl button{width:38px;height:38px;border-radius:50%;background:var(--paper);border:1.5px solid var(--ink);font-size:1.1rem;font-weight:700;display:grid;place-items:center}
+.mapctl button:hover{background:var(--ink);color:var(--paper)}
+.maphint{position:absolute;left:12px;top:12px;background:var(--paper);border-radius:999px;padding:4px 12px;border:1px solid var(--hair);z-index:2}
+.attrib{position:absolute;right:10px;bottom:8px;font-size:.66rem;color:var(--soft);z-index:2}
+.places{list-style:none;margin:0;padding:0;border-top:1.5px solid var(--line)}
+.place{border-bottom:1px solid var(--hair);transition:background .2s}
+.place.on{background:color-mix(in srgb,var(--c) 18%,var(--paper))}
+.place button{width:100%;text-align:left;display:grid;grid-template-columns:36px minmax(0,1fr);gap:14px;align-items:center;padding:14px 12px 6px}
+.place .n{width:36px;height:36px;border-radius:50%;background:var(--c);color:var(--on);display:grid;place-items:center;font-weight:700}
+.place b{display:block;font-size:1.08rem;letter-spacing:-.01em;line-height:1.15}
+.place small{display:block;color:var(--soft);font-size:.9rem;margin-top:2px}
+.place .dir{padding:0 12px 14px 62px}
+.place .dir a{font-weight:700;font-size:.9rem;text-underline-offset:3px}
+.mapside{position:sticky;top:20px}
+.allmap{margin-top:16px}
+
+/* when */
+.pick{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:1.12rem;margin-bottom:18px}
+.tbd-pill{font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:999px;border:1.5px dashed var(--ink)}
+.weeks{display:grid;grid-template-columns:1fr;gap:14px;max-width:960px}
+.weeks .or-badge{justify-self:center}
+.or-badge{width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-weight:700;font-size:.9rem}
+.week{border:1.5px solid var(--ink);border-radius:16px;overflow:hidden;background:var(--paper)}
+.week-head{display:flex;justify-content:space-between;align-items:baseline;padding:14px 16px;background:var(--ink);color:var(--paper)}
+.week-head b{font-size:1.5rem;letter-spacing:-.03em}
+.week-head span{font-size:1rem;opacity:.8}
+.days{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.day{border-left:1px solid var(--hair);padding:10px 8px 12px;display:flex;flex-direction:column;gap:8px;min-height:190px}
+.day:first-child{border-left:0}
+.dh{display:flex;flex-direction:column;align-items:flex-start;line-height:1.05}
+.dh span{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--soft)}
+.dh b{font-size:1.7rem;letter-spacing:-.03em}
+.none{font-size:.78rem;color:#A3A09B}
+.ev{display:flex;flex-direction:column;gap:2px;padding:8px 9px;border-radius:10px;background:var(--c);color:var(--on);text-decoration:none;transition:transform .15s}
+.ev:hover{transform:translateY(-2px)}
+.et{font-size:.74rem;font-weight:700;line-height:1.25}
+.en{font-size:.92rem;font-weight:700;line-height:1.15;letter-spacing:-.01em}
+.when-note{margin-top:16px;color:var(--soft);max-width:70ch}
+.tent{display:inline-block;margin-right:8px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:999px;border:1.5px dashed currentColor}
+@media (max-width:820px){
+.days{grid-template-columns:1fr}.day{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;min-height:0;border-left:0;border-top:1px solid var(--hair);padding:10px 14px;gap:8px 12px}.day>:not(.dh){grid-column:2}.day .dh{grid-row:1 / span 2}
+.day:first-child{border-top:0}.dh{flex-direction:row;align-items:baseline;gap:6px;width:70px}.dh b{font-size:1.25rem}}
+
+/* cost */
+.fees{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.fee{border:1.5px solid var(--ink);border-radius:16px;padding:24px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.fee .price{flex:none;width:clamp(100px,11vw,128px);aspect-ratio:1;border-radius:50%;background:var(--c);color:var(--on);display:grid;place-items:center;font-weight:700;letter-spacing:-.04em;font-size:clamp(2.2rem,4vw,3rem)}
+.fee b{font-size:1.25rem;letter-spacing:-.015em;display:block;margin-bottom:4px}
+.fee p{color:var(--soft)}
+
+/* join */
+.join{margin-top:96px;background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.join-dots{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+.join-in{position:relative;padding-block:60px;display:flex;justify-content:space-between;align-items:center;gap:28px;flex-wrap:wrap}
+.join h2{color:var(--paper)}
+.join p{max-width:46ch;margin-top:12px;opacity:.85}
+.join .btn{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.join .btn:hover{background:var(--paper);border-color:var(--paper)}
+.join-text{background:linear-gradient(140deg,rgba(255,255,255,.14),rgba(255,255,255,.04) 45%,rgba(255,255,255,.07));-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:clamp(22px,3vw,34px);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 24px 60px -24px rgba(0,0,0,.9);max-width:620px}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.join-text{background:rgba(40,40,40,.92)}}
+.join-right{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.join-btns{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.join .btn.ig{background:transparent;color:var(--paper);border-color:var(--paper)}
+.join .btn.ig:hover{background:var(--paper);color:var(--ink)}
+.qrcard{margin:0;background:var(--paper);color:var(--ink);border-radius:16px;padding:14px 14px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;width:168px;transform:rotate(3deg);box-shadow:0 18px 40px -16px rgba(0,0,0,.8);transition:transform .3s cubic-bezier(.3,1.5,.5,1)}
+.qrcard:hover{transform:rotate(0) scale(1.06)}
+.qrcard svg{width:140px;height:140px;display:block}
+.qrcard figcaption{font-size:.78rem;font-weight:700;text-align:center}
+footer{padding-block:22px 40px;display:flex;justify-content:space-between;gap:10px 24px;flex-wrap:wrap;color:var(--soft);font-size:.85rem}
+
+@media (max-width:900px){
+  .hero-in{grid-template-columns:1fr;padding-block:36px 40px;gap:36px}
+  .deck{height:clamp(300px,82vw,420px)}
+  .card{--w:clamp(150px,44vw,220px)}
+  .firm{grid-template-columns:1fr;gap:22px}
+  .gallery{order:-1}
+  .mapwrap{grid-template-columns:1fr}
+  .mapbox{aspect-ratio:4/5}
+  .mapside{position:static}
+  .sec{padding-block:64px 8px}
+}
+@media (max-width:560px){
+  .bar{grid-template-columns:1fr auto}
+  .bar>:first-child{display:none}
+  .bar>:nth-child(2){text-align:left}
+  .fees{grid-template-columns:1fr}
+  .fee{flex-direction:column-reverse;align-items:flex-start}
+  .facts div{grid-template-columns:1fr;gap:2px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<header class="hero">
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="wrap bar">
+    <span class="small">IIDA Cornell</span>
+    <span>Firm Crawl ’26</span>
+    <a class="small" href="https://linktr.ee/IIDACornell" target="_blank" rel="noopener">Join IIDA ↗</a>
+  </div>
+  <div class="wrap hero-in">
+    <div class="intro">
+      <h1>A&amp;D Student Firm Crawl</h1>
+      <p class="lede">Four Ithaca design firms are opening their doors to Cornell design students. Pick one, go see what they’re working on, and ask whatever you want.</p>
+      <dl class="quick">
+        <dt>Where</dt><dd>Ithaca, NY</dd>
+        <dt>When</dt><dd>Mid-November, times TBD</dd>
+        <dt>Cost</dt><dd>$8 IIDA members, $12 everyone else</dd>
+      </dl>
+      <div class="ctas">
+        <a class="btn solid" href="#firms">Meet the firms ↓</a>
+        <a class="btn" href="#map">See the map</a>
+      </div>
+    </div>
+    <div class="deck" aria-label="The four firms">
+      <a class="card c-pink" href="#bca" style="--i:0;--r:-7deg;--z:1"><span class="card-in"><div class="art"><img src="img/bca-2.jpg" alt=""></div><div class="lbl"><b>BCA</b><span>01</span></div></span></a>
+      <a class="card c-green" href="#holt" style="--i:1;--r:-2deg;--z:2"><span class="card-in"><div class="art"><img src="img/holt-1.jpg" alt=""></div><div class="lbl"><b>HOLT</b><span>02</span></div></span></a>
+      <a class="card c-orange" href="#chiang-obrien" style="--i:2;--r:3deg;--z:3"><span class="card-in"><div class="art"><img src="img/co-1.jpg" alt=""></div><div class="lbl"><b>Chiang O’Brien</b><span>03</span></div></span></a>
+      <a class="card c-yellow" href="#sedgwick" style="--i:3;--r:8deg;--z:4"><span class="card-in"><div class="art"><img src="img/sed-1.jpg" alt=""></div><div class="lbl"><b>Sedgwick</b><span>04</span></div></span></a>
+    </div>
+  </div>
+  <div class="wrap bar bottom">
+    <a class="small" href="#firms">The firms</a>
+    <span class="small hint">Hover a card</span>
+    <a class="small" href="#map">Map</a>
+  </div>
+</header>
+
+<main>
+  <!-- ================= FIRMS ================= -->
+  <section id="firms" class="wrap sec" aria-labelledby="firms-h">
+    <div class="sec-head">
+      <h2 id="firms-h">The firms</h2>
+      <p>You’ll visit one firm. If you can’t decide, pick what you’re into and we’ll suggest one.</p>
+    </div>
+
+    <div class="matcher" role="group" aria-labelledby="match-h">
+      <div class="matcher-top"><h3 id="match-h">What are you into?</h3><button type="button" class="clear" id="clear" hidden>Clear</button></div>
+      <div class="chips">
+        <button type="button" class="chip" data-tag="interiors" aria-pressed="false">Interior design</button>
+        <button type="button" class="chip" data-tag="architecture" aria-pressed="false">Architecture</button>
+        <button type="button" class="chip" data-tag="campus" aria-pressed="false">Schools &amp; campuses</button>
+        <button type="button" class="chip" data-tag="health" aria-pressed="false">Healthcare</button>
+        <button type="button" class="chip" data-tag="workplace" aria-pressed="false">Offices &amp; furniture</button>
+        <button type="button" class="chip" data-tag="green" aria-pressed="false">Sustainability</button>
+        <button type="button" class="chip" data-tag="engineering" aria-pressed="false">Engineering</button>
+      </div>
+      <p class="result" id="result" aria-live="polite">Pick a few and we’ll suggest a firm.</p>
+    </div>
+
+    <div class="firms">
+      <article class="firm c-pink" id="bca" data-tags="architecture interiors campus health engineering" data-name="BCA" data-n="1">
+        <div class="info">
+          <div class="firm-top"><span class="num">1</span><h3>BCA Architects &amp; Engineers</h3></div>
+          <span class="match">Good match for you</span>
+          <div class="about">
+            <p>BCA is an architecture and engineering firm that’s been around since 1970. They have 100+ people across seven offices in New York, including one in Ithaca, and architects, interior designers, engineers and construction managers all work in-house.</p>
+            <p>A lot of their work is schools, colleges and healthcare. Their interiors team does the bright, colorful kind of spaces you see in these photos.</p>
+          </div>
+          <dl class="facts">
+            <div><dt>They do</dt><dd>Architecture, interior design, building and civil engineering</dd></div>
+            <div><dt>Projects</dt><dd>K–12, higher ed, healthcare, civil, community</dd></div>
+            <div><dt>Ithaca office</dt><dd>798 Cascadilla St, Suite C</dd></div>
+          </dl>
+          <div class="links">
+            <a href="https://www.thebcgroup.com" target="_blank" rel="noopener">thebcgroup.com ↗</a>
+            <a href="https://www.thebcgroup.com/portfolio" target="_blank" rel="noopener">Portfolio ↗</a>
+          </div>
+          <p class="tba"><span class="tent">Tentative</span>Mon 11/9 or 11/16 · 10:00 AM – 12:00 PM</p>
+        </div>
+        <div class="gallery" data-gallery>
+          <div class="frame">
+            <figure class="slide on" data-cap="<b>Highland Falls–Fort Montgomery schools</b>, library"><img src="img/bca-1.jpg" alt="Elementary school library with red chairs, yellow shelves and a colorful mural"></figure>
+            <figure class="slide" data-cap="<b>Highland Falls–Fort Montgomery schools</b>, hallway"><img src="img/bca-2.jpg" alt="School hallway with a bold yellow and maroon wall graphic" loading="lazy"></figure>
+            <figure class="slide" data-cap="<b>Port Jervis schools</b>, library"><img src="img/bca-3.jpg" alt="Curving bookshelves under a wave-shaped ceiling light in a school library" loading="lazy"></figure>
+            <figure class="slide" data-cap="<b>Highland Falls–Fort Montgomery schools</b>, gym"><img src="img/bca-4.jpg" alt="Gym with red and yellow acoustic panels" loading="lazy"></figure>
+          </div>
+          <div class="g-bar"><p class="cap"></p><div class="g-ctrl"></div></div>
+        </div>
+      </article>
+
+      <article class="firm c-green" id="holt" data-tags="architecture interiors campus health green" data-name="HOLT" data-n="2">
+        <div class="info">
+          <div class="firm-top"><span class="num">2</span><h3>HOLT Architects</h3></div>
+          <span class="match">Good match for you</span>
+          <div class="about">
+            <p>HOLT has been based in Ithaca for over 60 years, with a second office in Syracuse. They describe themselves as having a process, not a style. Each project starts by listening to the client and the people who’ll actually use the building.</p>
+            <p>They work on campuses, housing, healthcare and offices, and do a lot of sustainable design (LEED, WELL, Passive House, net zero). If you’ve studied in Uris Library or eaten at Sage Hall, you’ve been inside their work.</p>
+          </div>
+          <dl class="facts">
+            <div><dt>They do</dt><dd>Architecture, planning, interior design, sustainable design, wayfinding and branding</dd></div>
+            <div><dt>Projects</dt><dd>Higher ed, housing, healthcare, workplace</dd></div>
+            <div><dt>Ithaca office</dt><dd>619 W State St</dd></div>
+          </dl>
+          <div class="links">
+            <a href="https://holt.com" target="_blank" rel="noopener">holt.com ↗</a>
+            <a href="https://holt.com/our-work" target="_blank" rel="noopener">Their work ↗</a>
+          </div>
+          <p class="tba"><span class="tent">Tentative</span>Mon 11/9 or 11/16 · 1:00 – 3:00 PM</p>
+        </div>
+        <div class="gallery" data-gallery>
+          <div class="frame">
+            <figure class="slide on" data-cap="<b>Colgate University</b>, Glendening Boathouse"><img src="img/holt-1.jpg" alt="Shingled boathouse lit up at dusk"></figure>
+            <figure class="slide" data-cap="<b>Wells College</b>, Sommer Center"><img src="img/holt-2.jpg" alt="Student lounge with red curved sofas under a wood-beamed ceiling" loading="lazy"></figure>
+            <figure class="slide" data-cap="<b>HOLT</b>, concept sketches"><img src="img/holt-3.jpg" alt="Hand sketches of building facades on tracing paper" loading="lazy"></figure>
+            <figure class="slide" data-cap="<b>Cornell</b>, Uris Library"><img src="img/holt-4.jpg" alt="Wide stair with multicolored treads leading into Uris Library" loading="lazy"></figure>
+          </div>
+          <div class="g-bar"><p class="cap"></p><div class="g-ctrl"></div></div>
+        </div>
+      </article>
+
+      <article class="firm c-orange" id="chiang-obrien" data-tags="architecture campus health interiors" data-name="Chiang O’Brien" data-n="3">
+        <div class="info">
+          <div class="firm-top"><span class="num">3</span><h3>Chiang O’Brien Architects</h3></div>
+          <span class="match">Good match for you</span>
+          <div class="about">
+            <p>Chiang O’Brien is a downtown Ithaca firm, a couple of blocks from the Commons, that mostly designs for colleges and universities. They’re a New York State certified minority- and woman-owned firm.</p>
+            <p>Their Cornell projects include Cornell Health, Jordan Hall and the Engaged Cornell Hub in Kennedy Hall. They won two AIA Southern New York awards in 2024–25.</p>
+          </div>
+          <dl class="facts">
+            <div><dt>They do</dt><dd>Programming studies, renovations, additions, new buildings</dd></div>
+            <div><dt>Projects</dt><dd>Mostly higher ed</dd></div>
+            <div><dt>Ithaca office</dt><dd>217 N Aurora St</dd></div>
+          </dl>
+          <div class="links">
+            <a href="https://chiangobrien.com" target="_blank" rel="noopener">chiangobrien.com ↗</a>
+            <a href="https://chiangobrien.com/selected-work/" target="_blank" rel="noopener">Selected work ↗</a>
+          </div>
+          <p class="tba"><span class="tent">Tentative</span>Wed 11/11 or 11/18 · 10:00 AM – 12:00 PM</p>
+        </div>
+        <div class="gallery" data-gallery>
+          <div class="frame">
+            <figure class="slide on" data-cap="<b>Penn State Scranton</b>, library and nursing building"><img src="img/co-1.jpg" alt="Glass and metal library building lit up at dusk"></figure>
+            <figure class="slide" data-cap="<b>Syracuse University</b>, Nancy Cantor Gallery"><img src="img/co-2.jpg" alt="White gallery space with display walls" loading="lazy"></figure>
+            <figure class="slide" data-cap="<b>Cornell</b>, Cornell Health"><img src="img/co-3.jpg" alt="Cornell Health building with a curved glass facade at dusk" loading="lazy"></figure>
+            <figure class="slide" data-cap="<b>SUNY ESF</b>, Moon Library café"><img src="img/co-4.jpg" alt="Library café with an orange column and counter seating" loading="lazy"></figure>
+          </div>
+          <div class="g-bar"><p class="cap"></p><div class="g-ctrl"></div></div>
+        </div>
+      </article>
+
+      <article class="firm c-yellow" id="sedgwick" data-tags="interiors workplace health campus" data-name="Sedgwick" data-n="4">
+        <div class="info">
+          <div class="firm-top"><span class="num">4</span><h3>Sedgwick Business Interiors</h3></div>
+          <span class="match">Good match for you</span>
+          <div class="about">
+            <p>Sedgwick is a commercial furniture dealer and a MillerKnoll Certified Dealer, so think Herman Miller and Knoll, plus DIRTT and a lot of other brands. Their team plans spaces, picks furniture and finishes, and handles delivery and install for offices, schools and hospitals around Upstate New York.</p>
+            <p>If you’re curious about the product and workplace side of interiors, this is the visit.</p>
+          </div>
+          <dl class="facts">
+            <div><dt>They do</dt><dd>Space planning, furniture and finishes, DIRTT walls, installation and project management</dd></div>
+            <div><dt>Projects</dt><dd>Offices, schools, healthcare, government</dd></div>
+            <div><dt>Ithaca showroom</dt><dd>21 Dutch Mill Rd</dd></div>
+          </dl>
+          <div class="links">
+            <a href="https://sedgwickbusiness.com" target="_blank" rel="noopener">sedgwickbusiness.com ↗</a>
+            <a href="https://sedgwickbusiness.com/projects" target="_blank" rel="noopener">Projects ↗</a>
+          </div>
+          <p class="tba"><span class="tent">Tentative</span>Fri 11/13 or 11/20 · Afternoon, time TBD</p>
+        </div>
+        <div class="gallery" data-gallery>
+          <div class="frame">
+            <figure class="slide on" data-cap="<b>SWBR headquarters</b>, Rochester"><img src="img/sed-1.jpg" alt="Living moss wall with the SWBR logo above a reception desk"></figure>
+            <figure class="slide" data-cap="<b>Cavu Escape Lounge</b>, Portland airport"><img src="img/sed-2.jpg" alt="Airport lounge bar with green chairs and wood slat ceiling" loading="lazy"></figure>
+            <figure class="slide" data-cap="<b>SWBR headquarters</b>, café"><img src="img/sed-3.jpg" alt="Office café with a long counter and green stools" loading="lazy"></figure>
+            <figure class="slide" data-cap="<b>SWBR headquarters</b>, materials library"><img src="img/sed-4.jpg" alt="Designers talking around a materials library table" loading="lazy"></figure>
+          </div>
+          <div class="g-bar"><p class="cap"></p><div class="g-ctrl"></div></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= MAP ================= -->
+  <section id="map" class="wrap sec" aria-labelledby="map-h">
+    <div class="sec-head">
+      <h2 id="map-h">Where they are</h2>
+      <p>Tap a firm to zoom in, or drag the map around. Directions open in Google Maps.</p>
+    </div>
+    <div class="mapwrap">
+      <div class="mapbox" id="mapbox">
+        <svg id="mapsvg" viewBox="230 166 680 907" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Street map of Ithaca with the four firm locations">
+          <rect x="-500" y="-500" width="2100" height="2400" fill="#F3F2EE"/>
+          <path class="m-campus" d="M1027.5 295.0 980.0 294.2 980.6 316.3 1030.8 314.3 1031.1 302.7 1034.8 301.3 1027.5 295.0ZM601.6 791.0 595.8 791.4 597.4 796.2 603.2 797.5 601.6 791.0ZM833.0 838.2 838.1 837.0 833.9 790.1 857.5 788.3 860.3 802.7 881.0 796.9 885.4 793.3 887.2 773.6 906.3 772.1 905.3 752.5 849.7 754.4 849.0 727.7 838.6 728.1 839.1 746.0 827.3 753.4 824.1 763.8 819.7 764.5 828.1 785.3 805.5 798.1 804.6 791.1 790.0 790.2 808.8 789.0 819.4 783.1 806.7 761.6 793.0 746.5 765.8 748.2 767.0 792.9 753.5 793.1 756.8 770.8 751.1 771.4 749.8 775.1 709.6 774.3 693.7 778.0 691.1 765.3 685.0 766.0 673.9 770.9 672.3 777.5 665.4 778.7 668.6 786.1 630.9 797.2 616.8 798.1 620.7 808.5 616.5 812.9 606.0 815.7 604.3 799.9 596.9 808.1 597.6 816.2 584.7 820.8 570.3 821.4 569.4 850.1 577.7 862.2 577.0 866.5 565.5 865.0 567.9 885.3 555.1 899.9 550.3 920.7 552.1 932.0 574.3 932.7 581.2 948.7 577.1 975.7 583.1 975.6 584.2 966.7 588.4 967.1 596.6 977.1 607.6 976.8 613.0 980.1 613.3 970.3 620.9 972.1 623.6 969.5 645.7 980.5 654.5 978.5 659.1 982.7 668.3 982.8 677.5 988.2 729.6 986.1 736.5 988.3 738.6 973.3 748.4 976.5 757.0 984.9 776.4 989.2 776.1 978.0 858.5 978.7 856.4 926.7 848.8 926.9 848.8 920.2 843.3 920.2 842.7 913.9 848.4 910.7 844.4 904.4 850.5 900.8 848.3 893.0 844.2 888.1 834.2 885.3 820.3 870.2 820.6 864.3 808.1 860.3 795.9 863.5 787.0 871.7 779.9 891.6 767.3 876.7 760.0 882.8 755.0 882.0 733.9 854.3 738.5 844.1 751.5 844.2 750.7 824.1 783.8 825.1 799.3 831.2 812.9 819.2 833.0 838.2ZM561.5 999.4 561.4 996.1 557.9 996.3 558.3 1008.8 566.2 1008.8 566.2 999.4 561.5 999.4ZM783.6 1048.2 772.7 1043.6 758.8 1044.5 761.4 1106.3 797.7 1105.8 792.4 1061.0 783.6 1048.2ZM812.4 1090.2 806.3 1087.2 804.2 1089.8 798.2 1083.7 799.4 1094.4 811.6 1106.6 826.4 1091.7 816.1 1085.0 812.4 1090.2ZM484.9 1166.3 481.1 1174.6 464.0 1176.9 453.8 1200.5 466.3 1222.2 480.8 1225.4 477.2 1237.1 483.6 1238.9 476.1 1255.1 479.5 1289.7 475.8 1298.8 474.9 1316.7 468.6 1316.6 468.3 1330.0 504.4 1328.9 507.7 1317.4 504.9 1292.2 499.9 1283.3 506.8 1258.0 523.6 1239.7 525.1 1231.5 540.0 1224.7 558.5 1224.5 558.5 1218.2 562.7 1212.6 568.9 1215.1 569.5 1206.5 575.6 1209.1 580.2 1207.6 584.9 1200.5 585.7 1188.6 589.6 1193.6 596.1 1190.5 593.3 1182.5 598.1 1181.1 591.8 1162.8 574.0 1147.1 561.6 1127.3 549.7 1124.3 530.5 1130.7 526.6 1125.6 509.8 1135.4 516.7 1150.4 509.3 1164.9 506.3 1164.0 501.7 1177.6 489.8 1175.4 492.3 1164.5 484.9 1166.3Z"/>
+<path class="m-water" d="M454.3 124.9 452.0 122.3 449.4 122.7 446.9 128.0 448.9 128.7 454.3 124.9ZM530.4 406.2 533.1 409.2 536.0 408.1 534.9 399.5 530.7 401.0 530.4 406.2ZM38.1 82.6 47.7 94.9 51.0 92.0 59.4 98.0 59.7 105.2 66.4 112.0 77.5 130.2 82.3 132.7 89.9 131.8 81.1 141.6 80.8 146.4 87.0 162.1 88.9 162.5 94.9 175.6 96.6 175.1 96.9 182.3 102.7 197.1 102.4 200.7 122.9 250.6 129.4 278.0 134.7 288.5 141.2 291.0 143.1 297.6 146.2 300.6 141.3 307.2 141.8 313.6 147.6 322.5 152.9 339.9 154.4 340.0 158.0 358.6 162.4 364.5 160.6 366.1 165.5 374.6 178.0 375.8 175.9 383.7 176.8 386.6 173.4 389.9 173.2 396.4 177.6 402.0 179.7 412.2 184.4 422.5 189.2 426.6 191.0 436.9 195.3 443.3 194.9 451.1 198.8 456.3 200.4 468.2 205.6 477.3 204.4 479.0 207.0 485.6 212.9 493.1 211.0 504.7 214.4 509.2 222.5 541.3 229.7 552.5 228.3 558.2 231.0 559.0 229.7 567.4 237.8 587.4 241.4 588.4 242.3 607.0 250.7 631.3 254.6 636.4 258.1 649.3 264.4 657.6 264.6 662.7 273.8 684.6 276.4 686.5 277.4 693.2 285.7 707.8 291.2 722.8 299.1 734.6 299.3 739.4 306.1 753.9 311.9 758.8 312.0 764.6 315.8 765.3 324.3 778.0 324.0 782.4 343.5 827.4 326.7 784.6 328.0 780.7 315.8 761.3 319.7 756.2 330.6 755.5 347.0 749.9 352.3 752.8 355.4 757.1 364.3 759.1 382.3 780.2 388.2 790.7 384.9 792.2 378.5 783.3 360.5 783.3 355.8 800.9 367.1 804.9 376.9 812.6 387.7 802.3 385.2 795.2 389.3 793.5 391.0 801.0 392.3 815.8 390.0 816.0 390.4 821.2 392.6 821.0 394.7 848.3 389.9 856.7 394.9 861.7 397.1 867.9 385.9 869.2 396.8 869.8 396.9 886.7 382.4 927.5 371.9 984.5 307.7 1132.6 308.6 1138.0 321.7 1160.2 322.7 1171.8 320.7 1185.9 309.3 1182.0 304.7 1182.2 299.9 1184.4 294.0 1194.3 287.4 1194.4 283.8 1191.2 278.3 1192.4 273.4 1202.6 270.3 1215.2 270.5 1220.3 273.3 1226.6 278.2 1229.9 272.0 1244.2 276.6 1248.6 277.1 1252.0 268.2 1257.8 264.0 1265.1 247.9 1274.9 246.4 1278.6 248.2 1283.0 243.9 1286.6 245.1 1292.4 246.3 1293.0 244.8 1286.9 250.2 1283.6 248.4 1276.0 263.8 1266.7 271.1 1257.2 277.1 1255.3 277.9 1246.7 288.4 1249.4 302.0 1256.0 305.8 1256.4 318.3 1264.0 309.0 1256.8 302.8 1255.7 289.6 1249.1 278.4 1245.7 275.4 1247.2 273.6 1242.7 279.8 1230.7 274.7 1225.9 271.3 1217.5 279.2 1194.1 293.5 1197.1 298.5 1193.6 301.2 1186.6 308.7 1184.4 317.9 1188.5 321.9 1187.7 324.9 1172.5 324.6 1160.2 312.9 1139.0 312.1 1132.8 367.3 1008.8 384.4 1010.3 389.8 1013.3 386.3 1018.5 383.5 1019.0 386.0 1019.5 387.9 1018.0 389.9 1013.7 383.6 1035.4 387.0 1038.1 395.2 1057.9 396.4 1105.5 399.4 1137.0 396.6 1140.3 399.6 1138.8 400.4 1151.3 401.3 1132.7 399.2 1110.6 401.2 1108.2 398.9 1105.2 397.6 1050.9 395.1 1050.2 386.4 1036.4 392.9 1017.4 402.7 1024.3 446.2 1065.2 463.7 1069.3 476.4 1067.0 488.7 1062.2 501.6 1055.9 506.0 1050.2 511.5 1029.3 530.4 1017.3 538.4 1015.5 559.4 1018.3 580.4 1032.5 585.8 1054.0 591.6 1063.9 602.8 1062.8 608.5 1065.2 614.7 1066.3 615.5 1069.7 612.9 1074.1 614.0 1083.5 617.4 1086.5 619.0 1085.6 621.9 1088.5 624.4 1094.1 619.4 1103.3 620.1 1105.4 620.1 1103.8 633.4 1105.8 641.7 1112.0 643.3 1118.4 658.3 1124.3 660.8 1128.8 664.3 1145.4 668.5 1151.2 674.2 1154.7 686.0 1153.5 692.1 1155.1 699.5 1171.8 691.8 1177.0 686.8 1185.2 689.6 1192.8 694.6 1189.9 701.8 1189.3 707.0 1191.4 713.3 1189.6 719.0 1193.2 727.6 1191.5 731.5 1195.6 737.0 1198.4 737.0 1204.0 739.8 1210.3 755.0 1216.9 764.0 1227.7 776.6 1228.0 780.1 1235.0 784.7 1238.0 795.7 1236.8 802.7 1241.4 809.1 1240.8 815.6 1248.8 814.8 1253.6 817.7 1253.5 815.0 1244.7 810.0 1240.0 801.0 1239.7 796.3 1234.8 787.1 1234.3 781.7 1231.8 778.8 1225.7 764.2 1226.1 755.3 1216.0 739.8 1209.3 738.1 1195.4 736.1 1193.9 732.9 1194.9 728.9 1190.8 734.5 1189.6 720.6 1179.5 710.6 1175.8 704.9 1170.9 702.6 1171.6 697.3 1158.5 693.4 1153.9 683.9 1151.6 673.6 1153.0 669.0 1149.9 663.7 1139.4 660.1 1122.4 646.8 1118.9 644.2 1115.8 644.3 1108.3 640.8 1105.2 638.6 1106.7 630.7 1102.4 628.4 1104.0 624.8 1101.0 624.6 1091.0 616.2 1074.9 617.4 1064.6 602.3 1061.0 590.7 1061.8 586.6 1052.2 584.0 1034.2 574.6 1024.0 570.9 1022.5 567.8 1022.5 564.4 1019.0 559.3 1017.4 537.3 1014.4 531.9 1015.7 511.1 1028.1 503.1 1052.8 474.0 1066.8 462.1 1067.7 463.9 1066.8 445.0 1062.5 394.1 1014.5 397.1 1002.3 397.2 924.9 403.6 921.3 407.8 916.2 403.2 913.1 399.3 913.2 399.1 909.0 412.9 875.9 421.5 872.3 437.5 873.9 454.7 879.4 497.7 949.4 527.7 964.8 535.9 965.8 542.1 969.7 554.3 967.7 555.8 971.7 558.2 972.4 563.7 967.9 583.8 964.3 591.1 967.5 612.7 968.0 619.7 966.6 629.9 968.1 634.8 971.2 647.6 975.4 652.5 973.8 656.5 978.5 666.4 979.2 673.2 978.1 676.3 974.7 682.7 972.6 685.4 967.1 685.3 963.0 690.7 963.2 693.6 962.6 694.2 961.8 694.5 958.2 698.9 955.6 701.5 952.1 719.5 950.7 735.9 955.0 741.2 970.5 742.9 971.8 736.6 954.8 719.3 950.3 700.5 952.0 693.8 957.7 692.4 961.5 685.7 962.3 684.0 963.4 682.9 969.7 678.5 971.2 673.0 976.7 664.6 978.5 656.3 977.2 652.1 972.5 648.8 974.7 640.9 973.0 630.2 967.1 621.2 965.8 590.9 966.8 588.2 962.8 569.8 965.3 563.1 967.4 558.2 970.5 555.6 966.3 542.8 969.1 538.2 965.7 527.7 964.0 500.4 950.7 455.6 877.7 431.5 868.7 423.3 867.9 413.3 869.6 410.4 867.8 405.7 819.4 405.9 796.6 394.8 774.9 374.9 750.7 377.2 751.2 403.8 786.1 420.3 785.7 429.2 787.6 435.1 791.0 439.5 795.5 441.2 802.4 445.9 804.2 442.7 799.3 443.4 797.7 448.7 800.7 468.8 818.8 482.4 835.7 490.6 841.6 520.4 852.4 539.6 856.0 543.1 854.5 562.7 862.2 565.2 862.8 566.2 860.4 566.9 863.6 582.0 864.6 590.9 869.3 607.8 869.4 613.3 872.5 619.7 871.2 622.6 865.5 628.4 863.0 644.5 874.6 650.3 873.5 650.6 875.6 654.3 875.5 655.1 872.4 659.4 871.1 666.7 872.4 682.8 881.9 687.0 888.1 696.8 890.8 702.2 890.3 707.8 882.1 707.5 877.7 713.0 874.8 716.9 867.8 717.4 864.2 714.6 858.8 717.6 850.4 719.6 849.4 730.4 852.5 750.8 879.8 759.6 883.8 765.6 881.7 770.2 872.2 771.8 872.1 773.4 864.2 781.5 857.6 801.0 853.7 804.6 855.4 825.4 856.5 837.3 852.9 854.3 838.7 851.3 837.2 848.2 838.7 834.6 851.1 828.1 850.1 821.4 852.5 793.2 851.4 776.6 856.5 770.6 862.7 769.7 870.4 765.5 878.3 759.9 882.2 755.1 880.9 748.8 873.4 733.4 850.1 720.4 847.0 716.4 848.3 712.8 855.8 715.2 868.3 712.7 871.3 703.4 873.1 697.7 873.4 690.3 869.0 682.5 868.8 679.8 866.3 667.8 865.5 664.3 862.7 658.4 867.4 657.0 867.1 656.5 871.2 646.6 873.6 637.7 868.0 636.6 864.9 627.9 861.3 621.4 863.7 617.9 868.7 604.2 866.8 592.0 868.1 586.3 864.5 568.1 862.4 566.9 858.8 562.7 858.2 557.9 853.3 552.9 855.8 521.0 850.4 488.1 836.6 467.7 810.5 472.6 808.5 471.6 804.5 459.1 802.5 455.3 798.5 449.1 796.7 448.2 793.2 453.6 784.9 463.5 783.1 475.1 770.0 459.5 782.5 455.1 775.5 448.9 777.0 447.6 786.6 445.1 790.9 434.5 783.9 416.9 777.4 412.7 772.2 416.0 768.5 427.4 769.2 451.3 757.9 468.2 747.3 477.4 736.6 490.8 726.0 491.2 722.2 489.1 720.2 491.4 715.2 486.6 706.0 488.2 702.6 483.1 689.6 470.5 667.0 468.1 667.9 469.4 672.1 468.0 673.0 463.0 660.4 463.0 655.2 461.2 655.3 462.2 647.2 458.3 638.9 441.1 618.4 442.0 611.2 432.7 600.7 434.2 594.4 430.7 580.9 421.7 571.7 414.0 558.7 413.4 542.9 401.9 509.3 380.0 392.9 373.4 367.9 370.8 366.1 373.3 362.9 362.8 310.7 356.0 293.0 352.3 290.2 351.5 291.6 355.3 295.2 352.6 297.6 349.2 294.7 339.0 263.7 322.2 150.9 316.8 127.3 313.5 118.8 303.2 103.6 294.2 82.6 283.8 79.4 264.7 66.4 264.2 56.7 267.4 39.1 270.7 42.8 268.0 37.9 268.5 27.6 266.2 19.6 252.3 2.2 247.1 0.0 0.0 0.0 0.0 46.9 15.9 61.3 19.5 61.3 21.6 63.3 23.4 68.1 38.1 82.6ZM391.1 931.1 394.2 1000.7 393.8 1007.5 391.6 1009.8 368.0 1005.6 377.2 984.3 386.3 937.4 388.3 931.3 391.1 931.1ZM612.4 1064.9 609.9 1065.1 605.4 1063.2 612.4 1064.9ZM596.1 1062.6 592.4 1063.2 591.6 1062.7 596.1 1062.6ZM582.7 1037.5 581.9 1034.5 581.9 1033.3 582.5 1033.7 582.7 1037.5ZM575.1 1026.3 578.7 1029.9 573.3 1026.3 575.1 1026.3ZM567.8 1023.0 572.9 1023.7 573.9 1024.9 571.8 1025.4 567.8 1023.0ZM495.6 1057.0 499.6 1054.8 500.0 1054.9 495.6 1057.0ZM493.8 1058.7 492.2 1060.4 486.4 1062.3 492.3 1059.0 493.8 1058.7ZM485.3 1062.2 484.5 1063.1 481.5 1063.8 481.8 1063.3 485.3 1062.2ZM461.3 1068.1 460.0 1067.3 461.4 1068.0 461.3 1068.1ZM459.3 1066.9 458.5 1067.1 457.7 1066.6 459.3 1066.9ZM457.1 1066.5 454.8 1066.7 454.5 1066.4 457.1 1066.5ZM695.4 876.9 702.5 877.7 705.7 880.8 705.6 883.1 701.3 885.3 699.6 881.3 695.0 878.6 695.4 876.9ZM693.2 961.6 693.9 961.5 693.0 962.7 693.2 961.6ZM691.7 962.7 692.7 961.8 692.8 961.8 691.7 962.7ZM690.8 962.2 691.4 962.5 690.3 962.5 690.8 962.2ZM691.4 962.6 690.5 962.8 690.1 962.7 691.4 962.6ZM639.6 1106.5 643.2 1108.1 644.1 1110.8 639.6 1106.5ZM638.2 1107.5 641.3 1110.2 637.4 1107.7 638.2 1107.5ZM622.1 1099.7 624.2 1103.6 620.7 1103.2 622.1 1099.7ZM614.6 1081.7 616.6 1084.0 616.6 1084.8 614.6 1081.7ZM735.5 1196.2 734.6 1197.1 734.3 1196.5 735.5 1196.2ZM780.4 1231.7 789.8 1236.0 784.7 1237.0 780.4 1231.7ZM777.1 1227.9 778.0 1227.8 778.2 1229.0 777.1 1227.9ZM830.0 851.7 828.3 851.2 831.3 851.4 830.0 851.7ZM826.5 852.8 825.7 853.9 824.7 853.4 826.5 852.8ZM824.7 854.7 822.2 855.2 821.4 854.8 824.7 854.7ZM417.7 769.1 413.8 772.5 416.0 774.6 420.3 771.5 417.1 774.2 418.4 775.9 426.1 772.4 425.2 770.4 417.7 769.1ZM522.1 1193.0 522.7 1185.0 518.5 1183.4 515.6 1193.7 519.3 1191.8 522.1 1193.0ZM310.4 1209.5 299.0 1213.9 298.8 1215.5 312.4 1211.7 310.4 1209.5ZM679.1 376.7 681.1 377.6 685.8 374.5 684.3 371.3 680.0 374.0 679.1 376.7ZM696.1 390.7 696.3 404.2 701.2 404.7 698.0 389.1 696.1 390.7ZM694.9 720.8 691.2 718.3 685.2 721.4 686.2 723.5 694.8 723.4 694.9 720.8ZM671.4 1246.3 672.4 1252.3 676.9 1256.1 680.8 1246.3 673.0 1243.7 670.1 1246.4 671.4 1246.3ZM892.5 185.2 891.9 193.2 897.3 194.5 894.4 182.8 892.5 185.2ZM787.4 239.6 784.3 251.3 790.0 250.9 791.6 252.5 791.9 248.4 786.8 247.6 786.8 245.8 792.4 241.2 787.4 239.6ZM805.2 271.9 795.2 254.6 798.6 264.8 798.3 267.1 794.8 267.9 793.6 266.9 795.6 262.6 791.4 254.0 786.4 254.1 788.1 266.7 786.6 268.2 784.3 267.1 784.1 255.1 781.9 253.7 782.6 260.4 780.5 262.3 780.0 267.9 774.9 270.5 772.9 266.6 771.3 271.1 774.8 272.7 774.8 275.0 781.6 272.4 784.2 277.2 783.7 281.7 775.2 280.4 774.7 283.3 779.3 286.7 781.1 297.5 786.8 298.5 783.6 292.4 782.6 284.3 789.4 298.9 792.2 296.9 790.0 287.3 793.4 269.0 797.6 268.6 799.6 271.9 796.6 279.1 799.0 281.1 805.2 271.9ZM914.8 342.7 906.6 341.7 900.8 334.7 899.8 335.9 902.7 343.7 901.3 347.7 905.3 352.6 907.8 353.0 914.8 342.7ZM852.1 357.1 848.3 358.7 851.1 368.0 852.9 363.0 852.1 357.1ZM862.2 420.2 868.5 419.2 872.1 424.5 876.5 426.9 878.8 424.5 874.6 422.7 873.0 419.4 872.7 421.3 870.9 420.6 873.8 416.1 877.3 415.0 870.5 415.9 869.9 413.6 871.2 412.5 879.3 414.3 880.3 411.6 878.9 409.0 877.1 409.6 877.2 408.2 871.7 405.7 871.2 407.0 870.3 405.5 863.5 405.6 858.2 401.5 860.3 420.9 863.2 423.0 862.2 420.2ZM782.2 491.3 792.6 495.5 791.7 488.4 787.7 486.9 782.7 488.3 782.2 491.3ZM820.4 520.5 822.5 520.6 827.1 513.3 826.5 511.3 820.1 510.4 820.4 520.5ZM895.3 542.7 895.7 540.2 891.2 540.3 891.1 545.0 895.8 546.5 896.9 545.8 892.8 545.4 893.0 543.3 899.8 544.7 898.4 540.4 895.3 542.7ZM891.6 566.0 885.4 566.3 874.2 557.6 868.7 560.9 865.0 566.2 868.0 565.6 867.2 567.3 870.2 567.5 875.5 572.6 886.5 573.9 888.4 572.1 887.6 569.6 892.7 567.3 893.7 564.6 889.9 560.4 889.9 556.5 885.7 555.1 875.7 557.0 885.0 565.4 891.6 566.0ZM872.7 870.9 866.8 864.0 864.9 865.4 866.0 867.9 870.2 869.7 870.2 875.0 872.8 876.3 872.7 870.9ZM858.9 883.3 866.1 878.8 869.6 882.5 872.0 879.9 867.2 874.9 857.8 879.4 858.9 883.3ZM873.5 980.6 883.6 982.8 886.0 978.8 878.2 976.9 873.5 980.6Z"/>
+<path class="m-river" d="M88.0 397.8 105.3 395.4 127.2 396.4 155.0 385.1 176.4 385.4M115.6 633.7 125.4 628.6 147.6 623.8 169.8 608.8 175.7 608.8 180.5 605.7 192.3 603.0 202.4 595.8 219.3 596.0 234.2 592.6 240.7 588.3M152.9 815.7 159.1 818.1 166.7 815.6 188.4 815.0 199.1 812.0 214.8 816.4 232.6 809.8 245.2 810.3 251.2 813.0 261.5 811.7 267.9 816.6 288.7 808.8 305.9 807.3 307.2 804.5 321.5 800.4 330.9 795.1 325.6 779.0 315.2 761.6 315.5 758.6M201.2 962.4 211.6 963.8 228.0 959.4 265.1 967.7 270.9 965.4 285.2 967.3 298.9 971.4 327.8 987.2 332.8 988.6 337.8 986.7 345.0 988.7 359.5 986.0 368.7 992.0M232.1 1335.8 234.7 1330.7 243.5 1326.0 246.2 1322.0 246.3 1318.5 242.3 1314.2 239.5 1303.6 235.8 1299.2 237.1 1296.0 238.7 1294.1 245.6 1293.9 244.6 1286.4 249.4 1282.9 247.9 1275.8 263.5 1266.1 270.4 1257.0 276.0 1254.8 277.8 1250.9 276.5 1248.1M276.5 1248.1 272.8 1243.1 279.0 1230.0 273.7 1225.7 270.9 1217.6 272.4 1209.0 278.7 1193.2 282.8 1192.4 286.0 1194.9 293.1 1196.1 300.1 1186.8 306.3 1183.5 310.7 1183.2 319.6 1187.8 321.8 1186.1 323.7 1173.1 323.2 1160.0 310.8 1137.4 310.5 1130.8 365.4 1006.5M378.6 1335.8 375.2 1329.3 355.5 1320.3 335.7 1279.4 328.8 1271.2 308.6 1257.1 279.0 1246.4 276.5 1248.1M425.1 1334.3 413.3 1317.9 395.3 1309.0 391.6 1292.6 385.4 1286.0 379.5 1283.7 372.4 1273.3 363.3 1271.8 356.2 1256.6 350.6 1255.2 343.6 1242.9 332.0 1243.7 316.9 1255.1M365.4 1006.5 391.5 1011.5M365.4 1006.5 375.8 978.6 385.6 929.6 390.6 923.4M1067.5 692.6 1060.3 697.7 1055.9 703.7 1056.4 716.6 1048.7 720.7 1043.2 720.2 1038.2 717.1 1033.5 706.3 1031.2 705.0 1023.0 715.2 1016.4 718.1 1009.6 734.2 1004.3 733.8 991.6 724.4 980.1 721.8 971.6 724.3 967.1 731.4 964.3 743.3 966.4 765.5 979.7 775.3 1010.2 781.6 1018.6 787.7 1020.2 793.6 1016.5 798.8 1007.0 801.1 993.7 820.1 978.3 832.9 968.7 837.9 960.4 837.3 952.2 839.4 936.4 846.0 929.8 843.2 903.3 822.9 899.6 823.2 883.0 834.6 857.0 834.3 835.5 851.8 818.9 853.9 800.1 852.9 785.1 855.3 778.3 858.2 772.5 863.7 765.9 879.4 760.0 882.8 755.0 882.0 751.4 878.4 731.0 850.8 720.9 848.3 717.8 849.2 714.1 856.4 716.4 867.1 712.3 872.6 697.8 875.1 682.4 873.8 664.5 869.2 659.5 869.9 653.1 874.1 645.9 874.1 628.7 862.4 623.3 863.4 619.3 869.4 594.3 868.8 581.0 863.8 567.2 862.8 565.6 859.6 543.8 854.2 538.4 854.9 518.5 850.8 492.5 840.7 482.8 833.8 468.7 816.0 442.6 793.0 434.3 787.0 415.9 781.6 397.8 767.6 366.8 725.0M395.4 789.6 392.5 779.8 368.2 753.0M382.3 794.4 395.4 789.6M391.5 1011.5 395.0 1008.2 395.7 1000.7 393.9 936.8 390.6 923.4M390.6 923.4 395.4 905.0 403.0 886.5 404.2 874.4M391.7 1013.9 391.5 1011.5M816.7 1253.6 816.1 1248.8 810.4 1240.5 799.0 1239.5 795.0 1235.8 784.3 1237.4 780.0 1233.5 778.3 1226.8 763.7 1226.4 755.4 1216.8 740.1 1210.2 736.0 1195.5 732.7 1195.4 725.8 1188.2 705.5 1180.0 692.8 1154.4 684.0 1152.5 674.2 1154.1 667.8 1149.7 659.5 1124.2 644.8 1118.4 642.6 1110.2 639.9 1107.7 624.9 1103.0 624.2 1091.2 618.6 1083.8 614.9 1074.2 616.7 1066.2 603.8 1062.2 590.4 1062.1 586.0 1052.5 582.8 1033.8 563.0 1019.5 540.3 1015.0 531.5 1016.3 511.5 1028.6 508.8 1033.4 505.2 1050.3 499.9 1056.0 474.9 1066.9 461.3 1068.5 446.6 1064.6 391.7 1013.9M398.0 1108.7 396.4 1055.5 385.2 1033.9 391.7 1013.9M404.2 874.4 395.4 789.6M1067.5 977.2 1064.6 971.7 1058.5 974.5 1056.1 973.1 1055.3 976.0 1053.8 975.6 1057.0 968.5 1047.5 968.4 1044.5 971.5 1038.8 965.6 1035.8 968.8 1031.8 967.3 1029.9 969.7 1031.1 973.9 1034.6 976.1 1031.5 980.7 1026.7 978.2 1027.0 972.9 1024.0 972.0 1020.8 979.1 1025.0 984.0 1021.9 985.4 1019.0 981.1 1014.3 983.3 1011.5 981.9 1010.7 983.8 1009.0 980.9 1010.9 977.2 1008.6 973.1 1001.9 974.2 1001.2 970.7 994.8 974.0 995.9 963.3 992.2 965.3 990.0 971.7 986.8 965.0 981.9 967.5 979.0 965.8 979.5 970.3 977.6 974.0 979.9 978.2 979.0 980.3 970.9 979.9 964.0 972.5 957.6 969.2 954.8 970.2 950.6 980.6 947.4 982.9 942.3 982.3 939.0 977.1 929.5 970.5 927.4 972.3 921.8 971.6 919.1 973.9 922.1 987.3 919.6 992.4 907.6 990.0 902.3 986.5 897.9 986.6 892.6 993.6 885.0 997.9 881.6 991.6 872.5 996.5 868.3 996.4 861.3 992.6 858.1 986.2 853.5 986.7 852.1 991.5 844.7 986.3 808.6 987.3 797.6 989.5 791.0 987.8 782.0 990.7 755.5 986.1 744.2 974.6 736.5 955.0 719.7 950.6 701.6 951.7 694.3 957.9 692.6 962.7 684.4 963.5 683.0 970.5 673.6 976.9 666.4 978.8 657.1 978.2 652.0 973.2 647.4 975.0 629.9 967.8 619.9 966.3 591.1 967.1 587.1 964.1 583.7 964.1 563.8 967.5 557.9 971.7 555.3 967.0 543.0 969.4 535.8 965.4 528.2 964.6 497.7 948.6 455.5 878.8 433.4 871.6 423.6 870.7 404.2 874.4M684.6 724.7 676.8 725.2 670.8 728.3 667.1 737.6 665.9 746.1 667.6 746.7 667.2 750.0 662.0 754.0 656.6 754.4 655.7 752.2 653.7 752.6 647.7 748.0 638.7 751.6 613.7 751.6 607.0 748.5 591.0 745.7 587.2 739.6 573.1 735.0 549.5 744.8 543.3 743.6 532.3 749.3 519.3 749.7 505.3 755.3 501.4 753.2M632.1 926.4 623.3 932.4 612.4 933.0 608.4 935.1M748.3 128.5 741.4 118.6 729.0 112.5 725.0 108.3 725.0 105.0 711.2 99.9 709.1 97.0 703.7 94.6 702.0 87.9 695.3 87.4 695.4 73.5 693.2 70.5 682.7 72.2 680.8 68.2 678.0 70.2 671.9 70.0 671.3 60.1 666.0 54.5 654.5 53.4 644.0 42.0 631.7 38.3 626.6 38.7M710.5 734.4 706.7 733.8 698.7 724.5 685.2 724.8M812.6 765.8 793.6 744.6 781.6 741.2 771.4 743.6 775.5 737.2 762.1 737.6 749.1 743.3 741.4 744.4 738.6 747.2 725.8 747.6 720.8 744.4 720.0 739.1 711.7 734.6"/>
+<path class="m-minor" d="M51.7 436.3 79.3 428.9 119.4 421.6 130.2 416.7 151.2 415.7 158.3 419.0 168.0 433.0M98.9 779.8 190.9 776.4M128.0 301.1 131.1 299.0 131.6 296.4 114.8 250.8 107.7 236.9 104.3 224.7M108.7 613.5 132.9 606.3 153.2 605.2 162.7 599.3M113.2 627.9 158.3 625.5M128.0 301.1 141.0 303.6 141.7 294.3 139.4 290.9M148.5 366.9 134.0 330.8 132.8 307.1 127.7 303.1 128.0 301.1M148.5 366.9 133.0 351.8M136.7 729.8 139.1 729.2M155.8 719.9 138.9 703.8 135.6 704.0 133.0 708.3 132.8 716.0 139.1 729.2M139.1 729.2 155.8 719.9M141.5 976.9 139.1 978.4 138.8 980.0 140.9 979.9 141.5 976.9M157.0 962.6 151.6 971.5 141.5 976.9M157.0 962.6 147.1 961.9M164.8 414.0 164.8 404.2 169.7 385.6 168.7 380.5 165.4 376.8 148.5 366.9M151.5 382.4 148.5 366.9M149.5 1335.8 147.3 1243.7 149.1 1239.3 163.5 1223.4M155.8 719.9 159.7 725.1 164.9 739.7M155.8 719.9 162.4 715.3 173.5 700.8 171.3 696.6 173.0 688.0 165.5 668.7 167.5 648.8 158.3 625.5M164.5 910.5 166.0 922.0 172.5 932.5 173.9 940.8 170.5 948.3 160.6 955.2 157.0 962.6M158.3 625.5 189.7 624.6 189.4 607.7M165.2 1260.8 169.7 1253.0 170.0 1238.4 174.1 1233.1 163.5 1223.4M163.5 1223.4 182.2 1197.2M184.7 1046.9 184.1 1027.6M188.9 669.5 184.7 652.3M206.5 1199.0 199.7 1174.7 176.1 1160.6 165.6 1148.6 162.0 1140.5 143.6 1124.0 121.1 1115.0 101.5 1101.2 92.7 1089.0 51.3 1052.9 54.5 1037.3 57.7 1033.2 86.8 1028.5 96.3 1037.7 101.6 1039.9 107.4 1040.3 123.1 1035.1 144.4 1036.3 150.2 1038.1 160.1 1047.4 184.7 1046.9M184.7 1046.9 193.7 1046.6M190.9 776.4 190.3 782.3 184.9 790.5 186.3 805.2M190.9 776.4 249.5 773.3M193.7 1046.6 193.2 1025.6M193.7 1046.6 215.3 1045.7M213.8 1010.9 211.2 908.6M213.8 1010.9 228.6 1011.0 229.2 1026.7M215.3 1045.7 213.8 1010.9M252.0 1121.6 235.0 1103.6 227.9 1092.4 216.8 1083.3 215.3 1045.7M215.3 1045.7 278.9 1043.7M242.4 1242.3 224.4 1243.2M234.1 896.2 231.4 893.6 220.8 893.8 219.3 895.1 219.4 900.1 232.0 900.9 234.1 896.2M234.1 896.2 241.5 895.9M241.5 895.9 238.2 880.2M241.4 907.6 241.5 895.9M257.9 895.0 245.8 895.9 241.5 895.9M263.6 1132.5 252.0 1121.6M277.8 1127.8 266.2 1119.3 257.2 1115.5 255.4 1115.8 252.0 1121.6M263.6 1132.5 256.5 1135.2M256.5 1135.2 255.0 1135.5 254.6 1134.7 256.0 1134.2 256.5 1135.2M256.7 779.3 265.0 774.4 271.8 775.8M257.9 895.0 258.1 899.4 259.9 900.7 266.7 899.5 268.6 895.7 267.5 891.9 262.7 889.4 257.7 889.5 257.9 895.0M271.2 1139.5 263.6 1132.5M267.1 1161.8 272.9 1162.6M269.0 1151.1 298.9 1150.5M271.8 775.8 274.4 779.3 274.1 780.4 272.4 779.1 271.8 775.8M272.9 1162.6 276.8 1165.2 290.2 1164.9 299.4 1155.1 298.9 1150.5M274.5 1157.5 272.9 1162.6M283.2 938.6 280.0 933.0 278.7 909.9 275.0 904.2M282.0 827.0 278.7 821.9 275.3 821.0M287.0 805.4 287.5 800.1 284.9 792.4 276.9 781.6M277.6 988.2 277.3 978.6M277.7 1008.1 277.6 988.2M277.6 988.2 286.0 985.7M278.9 1043.7 277.7 1008.1M277.7 1008.1 296.6 1007.5M278.9 1043.7 285.6 1043.4M286.0 985.7 285.3 973.7 281.0 959.9M281.0 959.9 280.7 941.6 283.2 938.6M281.0 959.9 292.0 959.2M294.1 831.2 282.0 827.0M289.0 869.4 280.1 848.7 280.1 832.3 282.0 827.0M292.0 959.2 288.9 947.6 283.2 938.6M285.1 1049.7 283.8 1050.1 284.2 1051.3 285.5 1050.9 285.1 1049.7M285.6 1043.4 285.1 1049.7M285.6 1043.4 302.9 1042.7 310.2 1038.6M286.5 996.4 286.0 985.7M286.0 985.7 295.0 981.3M300.3 1250.1 287.6 1243.4M295.0 981.3 292.0 959.2M294.1 831.2 294.2 823.6 290.2 816.8 294.0 814.3M306.3 838.7 294.1 831.2M301.6 864.0 294.4 847.6 294.1 831.2M296.6 1007.5 295.0 981.3M295.0 981.3 300.1 981.2 301.9 981.5 308.1 984.7 312.0 992.3M296.6 1007.5 322.6 1010.7M298.4 813.8 305.7 816.1 311.8 820.5 317.4 833.0 316.1 840.4 306.3 838.7M298.5 1062.6 310.2 1051.0 310.2 1038.6M298.9 1150.5 301.2 1150.7M299.0 904.7 296.8 890.0 297.9 886.2 301.8 885.3 309.4 891.9M323.4 1052.2 316.8 1055.3 303.2 1067.5M312.8 887.5 306.2 876.4M313.3 857.9 306.3 838.7M312.0 992.3 306.4 993.9M306.7 1072.6 319.3 1060.6 323.4 1052.2M309.4 891.9 309.8 904.9M312.8 887.5 309.4 891.9M310.2 1038.6 333.5 1023.9M312.0 992.3 315.3 994.2 323.2 994.1M319.5 902.1 312.8 887.5M322.7 880.8 312.8 887.5M316.5 871.2 317.3 868.0 313.3 857.9M325.1 871.9 320.9 860.9 316.9 858.2 314.7 857.8 313.3 857.9M322.0 973.3 321.4 962.9M323.2 994.1 322.0 973.3M338.6 962.1 328.9 971.3 322.0 973.3M322.6 1010.7 336.7 1012.6M322.6 1010.7 323.2 994.1M323.4 1052.2 328.6 1042.7 333.5 1023.9M352.9 127.1 341.0 128.9 342.6 144.3 339.9 147.1 335.0 145.5 330.1 133.4 326.4 133.4M343.6 189.7 341.4 190.5 339.8 188.9 339.1 176.6 332.3 152.1M333.1 1223.3 340.3 1229.2 355.8 1217.3 364.0 1207.0 390.8 1181.2 418.3 1160.9M333.5 1023.9 334.7 1019.6M333.5 1023.9 339.6 1020.1M339.6 1020.1 334.7 1019.6M334.7 1019.6 336.7 1012.6M336.1 919.6 346.3 917.5M336.7 1012.6 343.2 990.1 347.3 961.2M338.6 962.1 337.8 954.0 354.4 951.9M347.3 961.2 338.6 962.1M339.6 1020.1 345.0 1015.4 354.8 1000.0 363.8 990.4 366.4 990.4M340.2 904.1 346.4 893.0M346.1 201.7 348.1 207.6 345.6 211.7 346.7 216.6 344.7 225.6 340.3 230.2 341.2 239.0M343.6 189.7 343.8 198.9 346.1 201.7M363.8 172.5 354.8 171.4 346.3 164.7 343.9 165.0 343.6 189.7M361.6 1042.6 359.9 1054.8 345.7 1076.8M419.0 219.7 387.3 221.6 382.3 210.7 379.4 209.5 356.9 215.5 349.6 200.5 346.1 201.7M346.4 838.8 355.8 834.9 360.8 828.9M356.2 960.8 347.3 961.2M371.1 1181.0 366.5 1177.1 351.6 1177.0M352.9 127.1 355.5 140.4M366.3 126.6 352.9 127.1M370.4 851.0 360.8 828.9M360.8 828.9 382.0 810.1M391.8 1007.2 383.6 1017.9 378.6 1018.3 367.6 1014.3 361.6 1042.6M386.4 1041.4 361.6 1042.6M363.8 172.5 363.9 159.7 370.0 150.5 366.3 126.6M421.8 170.8 413.3 169.7 403.2 172.8 391.9 170.0 376.5 169.8 363.8 172.5M366.3 126.6 365.3 118.2M365.3 118.2 360.8 105.0 360.7 99.6 399.0 97.1M365.3 118.2 377.5 115.7 389.6 116.9 395.2 114.8 399.3 108.2 399.0 97.1M382.3 129.4 375.8 127.2 369.8 126.5 366.3 126.6M367.7 860.8 366.5 862.6M367.3 983.1 371.5 977.4 373.7 962.2 372.7 957.5M370.4 851.0 365.3 854.4 367.7 860.8M370.4 864.1 370.7 862.3 368.2 860.8 367.7 860.8M370.2 1079.5 369.0 1079.3M369.0 1079.3 365.9 1086.7 370.2 1079.5M382.7 1053.9 369.0 1079.3M376.5 1079.7 370.2 1079.5M370.2 1079.5 382.8 1055.9M383.6 847.8 370.4 851.0M419.6 191.4 411.2 189.1 399.8 192.5 388.4 188.3 376.0 188.7 371.2 185.9M382.6 1001.0 371.5 1001.9M376.5 1079.7 372.6 1087.1 373.7 1087.7M373.7 1087.7 377.7 1079.7M373.7 1087.7 383.8 1086.6M383.3 1071.1 380.1 1073.3 376.5 1079.7M377.7 1079.7 376.5 1079.7M377.7 1079.7 383.3 1072.3M378.0 941.5 374.3 939.4 372.2 934.1 371.8 911.6 377.1 905.7 387.3 904.2M379.6 1171.1 372.0 1163.1 389.2 1147.0 395.7 1146.4M383.6 847.8 380.0 836.4M382.3 129.4 381.8 139.5M382.0 810.1 386.4 810.0 387.2 805.3 385.0 807.3 382.0 810.1M394.2 134.2 382.3 129.4M382.7 1053.9 382.8 1055.9M384.9 1048.4 382.7 1053.9M382.8 1055.9 383.3 1071.1M382.8 1055.9 383.8 1054.3M383.0 1005.1 384.5 1002.4M383.3 1071.1 383.3 1072.3M384.4 1070.4 383.3 1071.1M383.3 1072.3 383.8 1086.6M383.3 1072.3 384.5 1071.4M383.4 868.6 389.0 859.3 383.6 847.8M383.8 1086.6 384.9 1085.8M384.4 1070.4 383.8 1054.3M383.8 1054.3 385.4 1049.3M384.5 1071.4 384.4 1070.4M390.3 1066.6 384.4 1070.4M384.9 1085.8 384.5 1071.4M384.5 1071.4 390.4 1067.9M384.9 1048.4 385.4 1049.3M384.9 1085.8 390.8 1082.1M391.4 1066.1 391.0 1056.9 385.3 1047.5M385.4 1049.3 385.3 1047.5M385.3 1047.5 386.4 1041.4M385.4 1049.3 390.0 1057.1 390.3 1066.6M386.4 972.0 389.8 967.8 389.7 945.5M414.8 1045.6 407.4 1040.8 386.4 1041.4M390.3 1066.6 390.4 1067.9M391.4 1066.1 390.3 1066.6M390.4 1067.9 390.8 1082.1M390.4 1067.9 391.4 1067.5M390.8 1082.1 391.4 1067.5M391.4 1067.5 391.4 1066.1M393.3 1114.5 373.2 1117.8 387.5 1117.6 393.7 1115.3M418.1 1108.5 404.7 1109.2 393.3 1114.5M393.7 1115.3 395.7 1146.4M393.7 1115.3 404.1 1110.4 418.1 1109.5M394.2 134.2 393.9 138.7M411.0 130.5 394.2 134.2M396.4 309.9 394.9 289.8M394.9 289.8 396.8 286.2 394.2 284.3 392.3 286.5 394.9 289.8M395.7 1146.4 400.0 1153.6M396.4 309.9 415.8 310.1M418.5 249.1 411.3 249.1 400.9 254.4 378.7 254.4 373.0 257.0 369.6 261.3 368.6 268.8 374.8 301.5 383.1 308.9 396.4 309.9M399.0 97.1 396.6 82.6M400.0 418.6 396.8 421.3 396.7 441.5M441.0 108.3 411.1 96.7 399.0 97.1M399.8 954.5 410.9 954.2M401.3 403.6 399.3 388.7 400.4 379.2 404.6 368.0 411.8 360.6M404.3 1187.0 419.3 1176.6M404.5 966.7 436.6 965.4M428.2 895.3 406.2 922.0M433.7 902.0 425.9 907.0 425.1 911.3 407.8 935.7M411.0 130.5 409.2 138.2M410.9 1171.4 409.9 1173.6M410.8 909.9 422.4 893.6 428.2 895.3M418.3 1160.9 410.9 1171.4M410.9 1171.4 416.6 1168.1M424.6 130.1 411.0 130.5M413.7 1071.4 426.2 1071.5M413.7 1071.4 413.0 1096.3 420.9 1096.0M414.8 1045.6 413.7 1071.4M426.2 1071.5 424.4 1070.9 413.7 1071.4M414.8 459.7 435.1 464.6M414.8 459.7 417.1 484.0M421.8 442.2 412.6 451.9 412.2 455.9 414.8 459.7M444.7 1070.9 444.8 1065.7 427.9 1050.1 419.5 1049.4 414.8 1045.6M415.0 321.9 425.5 321.5 433.0 327.4 454.4 326.1M440.7 851.8 425.0 861.1 415.3 863.4M418.1 1108.5 418.1 1109.5M420.9 1108.4 418.1 1108.5M418.1 1109.5 418.5 1118.2M418.1 1109.5 427.5 1109.2M418.3 1160.9 429.8 1152.7M418.5 1118.2 419.1 1136.3 420.6 1138.5M427.9 1117.7 418.5 1118.2M420.9 1096.0 420.9 1108.4M427.5 1108.1 420.9 1108.4M427.0 1095.7 420.9 1096.0M435.1 464.6 432.2 460.3 425.5 455.8 421.8 442.2M429.7 431.6 425.3 434.2 421.8 442.2M424.6 130.1 422.7 137.8M424.1 159.7 473.9 157.2 515.8 157.8M431.6 132.0 424.6 130.1M424.8 1030.3 443.1 1029.6M426.2 1071.5 444.7 1070.9M426.7 1084.0 445.2 1083.2M427.6 931.4 439.5 951.1M428.2 895.3 433.7 902.0M428.3 1043.1 438.3 1053.5M429.8 1152.7 428.6 1131.3M429.8 1152.7 442.9 1142.7M430.7 509.3 441.2 512.1 448.0 507.2 469.7 499.2M431.3 143.1 429.4 140.2 431.6 132.0M431.6 132.0 436.8 114.1 441.0 108.3M456.3 473.6 451.3 484.5 447.5 485.1 442.0 480.4 437.2 479.5 433.6 482.1 432.3 488.6M433.7 902.0 439.1 910.9M435.1 464.6 444.0 466.6 450.8 465.3M441.9 935.6 435.9 925.6M436.6 965.4 436.1 953.2M437.5 989.8 436.6 965.4M436.6 965.4 444.6 965.0M438.3 1053.5 449.3 1063.1 462.0 1065.6 475.5 1063.7 488.7 1058.4M438.3 1053.5 472.1 1051.3M439.1 910.9 444.5 920.2M455.4 899.4 439.1 910.9M439.5 951.1 439.7 952.9M439.5 951.1 448.1 946.0M443.3 856.6 440.7 851.8M440.7 851.8 452.6 846.4M441.0 108.3 496.4 89.9M443.1 1029.6 441.6 989.7M443.4 1039.1 443.1 1029.6M443.1 1029.6 461.2 1028.9M446.9 862.6 443.3 856.6M453.0 850.4 443.3 856.6M444.6 965.0 444.2 952.9M444.5 920.2 453.7 935.6M444.5 920.2 453.0 915.0M445.6 989.5 444.6 965.0M444.6 965.0 476.9 963.8M488.6 1063.3 471.5 1069.1 462.7 1070.3 450.3 1070.8 445.8 1070.9 444.7 1070.9M445.2 1083.2 444.7 1070.9M445.2 1083.2 488.5 1081.2 488.6 1063.3M464.6 872.7 461.6 871.6 457.6 876.3 455.5 876.4 446.9 862.6M446.9 862.6 455.4 857.1 453.0 850.4M451.9 952.5 448.1 946.0M448.1 946.0 445.1 940.8 453.7 935.6M448.1 946.0 456.8 940.8M458.2 636.2 447.6 617.2 449.5 615.3M456.3 473.6 453.7 461.6 452.0 424.5M453.0 850.4 452.6 846.4M452.6 846.4 469.3 845.8 476.0 840.8 475.9 834.6 473.0 827.2 460.8 817.6M452.7 774.3 447.7 764.2 426.5 774.7 425.3 777.2 426.8 779.4 436.7 782.8 452.7 774.3M452.7 774.3 464.5 774.0 481.8 763.6 482.8 755.3M465.3 935.6 453.0 915.0M453.0 915.0 461.6 909.8M453.7 935.6 456.8 940.8M454.4 326.1 453.5 292.8 455.7 291.3 471.6 291.0 473.5 293.8 474.9 329.4 472.7 331.1 457.9 331.7 455.3 329.9 454.4 326.1M461.6 909.8 455.4 899.4M465.1 907.5 462.8 895.7 455.4 899.4M456.3 473.6 586.2 466.3M456.8 940.8 462.8 950.8M456.8 940.8 465.3 935.6M457.9 1093.3 456.6 1091.7 455.7 1092.1 455.9 1093.2 457.9 1093.3M478.9 1093.4 476.7 1093.1 457.9 1093.3M472.6 1107.7 469.4 1118.4 458.2 1125.8M473.9 930.4 461.6 909.8M461.6 909.8 465.1 907.5M462.8 950.8 463.5 952.1M462.8 950.8 471.3 945.7M462.9 1074.8 481.0 1074.0M475.9 569.7 472.3 569.0 464.0 551.8M464.0 551.8 456.6 562.0 466.3 578.8M471.7 546.8 466.0 547.5 464.0 551.8M465.1 907.5 466.7 907.2 467.1 907.7 472.7 917.2M471.3 945.7 465.3 935.6M465.3 935.6 473.9 930.4M472.3 903.4 466.2 893.1M466.2 893.1 460.6 883.0 468.5 877.9M483.2 882.9 466.2 893.1M469.6 595.2 468.2 594.7 467.7 596.2 468.9 596.7 469.6 595.2M469.6 595.2 484.9 590.1 497.2 570.7M470.3 751.3 468.2 751.3 467.7 752.2 469.0 752.3 470.3 751.3M482.7 754.0 480.9 743.9 478.4 744.2 470.3 751.3M472.1 1051.3 470.9 1018.4M474.8 951.7 471.3 945.7M471.3 945.7 480.0 940.6M475.0 557.9 471.7 546.8M471.7 546.8 489.1 545.7M472.1 1051.3 480.2 1051.0M484.5 924.0 472.3 903.4M472.3 903.4 486.0 896.2M480.0 940.6 473.9 930.4M473.9 930.4 482.3 925.2M482.3 925.2 476.3 915.0M476.7 861.1 510.4 859.5M483.2 882.9 477.2 872.9M486.4 951.2 480.0 940.6M480.0 940.6 488.5 935.5M510.4 859.5 510.0 851.6 481.0 852.8M488.5 935.5 482.3 925.2M482.3 925.2 484.5 924.0M482.8 755.3 482.7 754.0M489.1 753.6 482.7 754.0M482.8 755.3 489.1 755.1M485.4 883.1 484.6 882.4 483.2 882.9M484.0 1205.6 494.9 1208.7M495.2 1206.2 484.3 1204.2M507.2 933.8 490.7 934.5 484.5 924.0M484.5 924.0 487.7 922.1M484.5 951.3 488.7 1058.4M485.4 883.1 484.5 870.1M485.4 883.1 486.3 883.6 504.6 882.9M486.0 896.2 485.4 883.1M485.6 1289.4 483.4 1280.8 484.4 1269.7 490.8 1259.7 509.0 1240.7 514.1 1229.4M486.0 896.2 487.2 896.3 505.3 895.6M486.5 908.2 486.0 896.2M487.7 922.1 486.6 909.1M493.7 843.9 487.3 842.3M487.7 922.1 506.5 921.1M497.0 950.8 488.5 935.5M488.6 704.1 489.8 699.8M502.4 1057.3 488.6 1063.3M488.7 1058.4 502.3 1052.0M489.1 545.7 489.9 551.7 494.2 555.0M538.4 521.5 536.8 516.3 532.5 514.6 514.5 517.4 494.5 526.1 490.4 531.5 489.1 545.7M489.1 545.7 495.1 543.8 506.2 534.6 520.8 530.8 528.6 525.1 538.4 521.5M492.8 1016.5 492.6 1013.1 491.8 1012.6M492.8 1016.5 491.8 1012.6M491.8 1012.6 493.0 1012.4 492.8 1016.5M492.2 816.2 505.3 815.6M492.4 771.8 498.0 772.1 502.1 768.8 501.1 763.8 497.8 760.3M492.7 826.6 504.3 824.9 505.3 815.6M495.2 1206.2 494.9 1208.7M517.7 186.9 495.4 187.6M505.2 1196.8 498.7 1199.2 495.7 1206.1M497.1 1206.5 496.6 1206.1 495.9 1206.0 495.7 1206.1M495.7 1209.1 497.5 1208.1M501.7 1229.0 494.7 1222.2 495.7 1209.1M497.5 1208.1 497.1 1206.5M497.1 1206.5 498.6 1201.4 505.3 1198.2M497.5 1208.1 501.5 1208.7 504.8 1207.7M498.7 946.9 507.8 946.5M517.1 958.6 498.7 948.3M508.1 955.5 498.7 950.7M513.9 1007.6 501.5 1006.9M501.5 1006.9 517.8 1005.4M513.9 1006.4 501.5 1006.9M501.7 1229.0 505.0 1229.3 508.9 1228.3 522.6 1219.6M514.1 1229.4 506.9 1231.9 501.7 1229.0M501.8 644.5 499.9 625.8 495.1 607.4 498.1 601.2 498.1 596.3 510.9 592.0 519.3 593.1M536.5 633.5 524.2 633.8 512.8 637.5 501.8 644.5M534.6 737.8 502.1 645.3M507.9 752.9 511.6 749.5 514.0 720.5 496.8 664.1 495.4 651.4 502.1 645.3M502.7 1075.8 502.1 1061.7M519.1 1039.5 519.0 1035.9 502.4 1055.2M503.1 1088.5 502.7 1075.8M512.9 1059.9 506.9 1073.6 502.7 1075.8M504.6 882.9 503.7 868.1M505.3 895.6 504.6 882.9M504.6 882.9 513.6 882.6M504.8 1207.7 505.3 1206.8 506.2 1207.2 505.6 1208.2 504.8 1207.7M505.2 1196.8 505.3 1198.2M506.6 1196.1 505.2 1196.8M506.5 921.1 505.3 895.6M505.3 895.6 514.2 895.2M505.3 815.6 504.8 808.1 517.1 807.5M505.3 1198.2 507.5 1200.2 507.5 1197.2M505.3 1198.2 507.5 1197.2M507.2 933.8 506.5 921.1M506.5 921.1 535.3 919.9M507.5 1197.2 506.6 1196.1M514.1 1178.6 511.7 1189.8 506.6 1196.1M507.8 946.5 507.2 933.8M535.8 932.5 507.2 933.8M507.5 1197.2 513.1 1190.2 514.1 1178.6M507.8 946.5 536.3 945.4M527.0 964.8 508.1 955.5M508.8 972.7 508.1 955.5M514.1 1011.7 508.1 1012.0M515.0 770.6 517.8 765.1 516.5 760.1 508.6 754.7M510.4 859.5 512.5 859.4M512.9 867.7 512.5 859.4M512.5 859.4 520.4 859.2M512.9 1059.9 515.7 1053.6 519.5 1050.5M512.9 1059.9 519.8 1059.9M513.2 875.8 533.0 874.7 532.7 866.6M513.4 1003.5 517.7 1003.4M513.8 887.9 533.9 887.0M513.9 1006.4 513.9 1007.6M517.8 1006.2 513.9 1006.4M513.9 1007.6 514.1 1011.7M517.9 1007.5 513.9 1007.6M514.1 1011.7 514.5 1012.0 520.9 1011.7M514.1 1011.7 514.2 1016.6M514.1 1178.6 522.6 1181.1M514.1 1178.6 518.5 1171.6 530.6 1166.6M514.1 1229.4 528.7 1226.6M515.8 157.8 517.7 186.9M515.8 157.8 542.2 156.7M530.6 1166.6 529.9 1162.2 532.9 1154.2 524.9 1146.7 524.6 1140.8 517.1 1129.4M517.8 1005.4 517.7 1003.4M517.7 1003.4 518.6 997.5M517.7 1003.4 518.8 1003.3M542.2 156.7 542.5 185.4 517.7 186.9M517.8 1005.4 518.9 1005.4M517.8 1006.2 517.9 1007.5M518.9 1006.2 517.8 1006.2M519.9 1007.4 517.9 1007.5M518.8 1003.3 518.6 997.5M518.6 997.5 519.6 997.5 519.8 1005.3M518.9 1005.4 518.8 1003.3M519.4 1049.2 519.1 1039.5M556.2 1038.1 519.1 1039.5M536.5 633.5 529.4 625.7 519.3 593.1M532.8 590.2 519.3 593.1M519.5 1050.5 519.4 1049.2M519.4 1049.2 555.8 1047.8M519.8 1059.9 519.5 1050.5M519.6 1073.0 519.8 1059.9M519.8 1059.9 536.9 1058.9M527.5 1005.8 527.4 1005.0 519.8 1005.3M519.8 1006.1 519.9 1007.4M527.5 1005.8 519.8 1006.1M519.9 1007.4 527.2 1007.0M529.7 1117.3 527.0 1116.7 520.3 1120.3M520.8 867.3 520.4 859.2M520.4 859.2 536.4 858.4M520.9 790.2 523.4 779.7M523.4 779.7 521.9 756.2M522.6 1181.1 527.5 1193.3M522.6 1181.1 525.6 1178.0 558.2 1167.8M522.6 1219.6 523.9 1218.9M523.9 1218.9 522.5 1218.2 522.6 1219.6M523.4 779.7 529.2 787.6 529.8 793.8 532.0 795.3M523.6 1199.8 521.5 1200.7 522.2 1202.2 523.7 1201.7 523.6 1199.8M523.6 1199.8 527.9 1196.5 527.5 1193.3M523.9 1218.9 537.0 1213.2M532.7 1097.7 524.5 1098.0M524.7 907.6 534.7 907.3M527.2 1007.0 528.5 1010.1 527.6 1007.0M530.2 835.7 527.2 836.1M527.5 1193.3 535.4 1190.6M527.6 1007.0 527.5 1005.8M528.4 540.1 526.6 540.2 526.7 541.7 528.4 541.7 528.4 540.1M539.6 533.4 528.4 540.1M528.7 1226.6 542.3 1222.7 556.7 1223.9 557.3 1222.5 539.9 1220.7 529.6 1223.8 528.7 1226.6M528.9 838.8 530.2 835.7M554.8 703.6 544.6 679.6 536.7 673.1 529.1 672.8M531.5 1121.8 529.7 1117.3M529.7 1117.3 534.5 1109.0 554.9 1108.0M540.3 995.8 530.1 996.0M557.5 823.1 555.7 826.5 551.0 827.7 546.8 832.1 538.4 830.1 530.2 835.7M530.6 1166.6 547.7 1161.6 553.1 1163.2 558.2 1167.8M532.8 590.2 531.1 577.5M569.5 561.3 549.2 562.7 534.4 567.0 530.7 570.1 531.1 577.5M531.1 577.5 558.0 570.9 569.3 572.8M560.2 799.4 557.6 804.0 556.7 811.3 554.8 812.5 532.0 795.3M532.0 795.3 534.6 737.8M532.7 1097.7 532.8 1103.6M537.4 1097.7 532.7 1097.7M537.2 620.8 532.8 590.2M550.4 590.3 546.8 589.5 532.8 590.2M533.9 887.0 533.4 880.4M534.7 907.3 533.9 887.0M541.2 738.5 537.9 736.9 534.6 737.8M535.3 919.9 534.7 907.3M535.8 932.5 535.3 919.9M535.4 1190.6 535.0 1188.4 537.9 1187.0 540.7 1192.7 536.7 1193.6 535.4 1190.6M552.0 1027.8 535.6 1028.5M536.3 945.4 535.8 932.5M541.2 738.5 541.6 732.3 536.2 727.6M536.2 727.6 535.3 726.9 535.6 726.0 536.3 726.4 536.2 727.6M538.4 964.4 537.0 962.9 536.3 945.4M537.7 637.8 536.5 633.5M538.2 633.3 536.5 633.5M538.2 633.3 537.2 620.8M561.1 632.8 552.1 632.9 547.7 620.2 537.2 620.8M538.7 985.8 537.2 971.5M555.2 1102.7 537.4 1097.7M537.4 1097.7 539.6 1092.0 544.2 1091.7M541.4 651.6 537.2 644.2 537.7 637.8M537.7 637.8 538.2 633.3M539.2 526.0 538.4 521.5M560.8 966.3 556.0 960.6 553.9 965.3 548.4 961.5 550.0 964.9 548.9 966.2 539.0 963.4M539.6 533.4 539.2 526.0M539.2 526.0 543.1 525.3M539.6 533.4 542.8 533.9M540.3 995.8 540.0 985.8M556.9 995.2 540.3 995.8M569.1 732.2 559.9 735.5 559.3 745.2 556.4 751.1 547.0 745.3 541.2 738.5M545.9 660.1 541.4 651.6M552.0 644.7 541.4 651.6M541.4 1089.1 544.0 1089.1M548.9 781.5 541.9 763.9M542.2 156.7 565.3 154.2 582.5 132.9M543.1 525.3 542.7 521.4M543.5 529.0 543.1 525.3M544.2 1091.7 544.0 1089.1M544.0 1089.1 546.6 1089.0M544.2 1091.7 546.6 1091.7 548.0 1092.4M545.8 985.5 545.4 976.4M550.8 711.4 545.5 710.7M565.8 710.3 558.9 686.1 545.9 660.1M556.8 658.6 551.3 657.9 545.9 660.1M547.5 1211.9 556.9 1212.1 560.3 1207.5 565.9 1205.1 578.2 1207.7 584.4 1202.1 584.3 1191.3 587.6 1184.2 584.6 1174.6 586.8 1167.2 580.7 1156.2M550.8 782.4 548.9 781.5M549.1 783.7 548.9 781.5M560.2 799.4 554.1 797.6 550.7 794.4 549.1 783.7M549.1 783.7 550.8 782.4M565.8 933.1 552.5 933.0 551.1 922.3 549.6 921.1M574.6 1038.1 563.2 1025.6 557.5 1023.2 549.8 1023.8M561.1 632.8 550.4 590.3M550.4 590.3 566.6 583.6 569.3 572.8M573.5 722.3 561.5 722.6 550.8 711.4M554.2 706.1 550.8 711.4M555.5 783.6 550.8 782.4M551.5 985.3 551.1 976.0M552.0 644.7 551.0 643.6 550.8 642.5 552.1 642.8 552.0 644.7M554.8 703.6 554.2 706.1M557.4 705.3 554.2 706.1M557.4 705.3 554.8 703.6M559.3 784.0 555.5 783.6M555.5 783.6 555.7 790.8 558.6 792.7 561.5 792.0M567.7 1111.2 555.6 1109.8M562.7 840.2 556.2 841.4M556.9 995.2 556.7 985.1M565.7 651.0 568.9 668.1 565.6 663.4 556.8 658.6M556.8 658.6 560.8 653.3 565.7 651.0M557.5 1010.0 556.9 995.2M561.0 995.0 556.9 995.2M565.0 1097.8 557.2 1096.3M565.0 1047.4 567.1 1058.0 571.4 1062.7 557.3 1058.1M561.8 876.1 558.0 876.3 557.3 872.1M565.8 710.3 561.6 706.2 557.4 705.3M568.9 830.2 557.5 823.1M571.0 796.0 564.0 806.8 557.5 823.1M558.0 985.1 557.8 979.0M558.2 1167.8 563.5 1182.2 564.1 1187.0 562.3 1187.7M580.7 1156.2 570.6 1153.2 565.0 1153.9 561.6 1156.8 561.0 1164.9 558.2 1167.8M571.0 796.0 560.2 799.4M561.8 876.1 560.7 867.3M560.8 966.3 560.6 959.6 573.2 951.7 574.9 937.9M570.2 962.1 567.0 962.0 565.8 964.5 560.8 966.3M584.0 1092.2 577.1 1082.3 572.7 1071.3 560.8 1071.4M565.7 994.8 565.9 1003.0 561.6 1002.7 561.0 995.0M565.7 994.8 561.0 995.0M562.6 638.7 561.1 632.8M563.5 886.7 561.8 876.1M561.9 1118.3 568.4 1118.6 578.0 1126.4M562.3 1187.7 562.3 1189.6 558.8 1190.1 558.3 1188.4 562.3 1187.7M563.0 984.9 562.5 973.2M590.2 663.6 581.6 652.5 566.1 643.1 562.6 638.7M565.7 651.0 562.6 638.7M562.7 840.2 563.6 843.7M569.0 838.1 562.7 840.2M582.5 132.9 568.5 120.2 563.2 119.0M565.8 933.1 564.7 920.9M564.9 1031.3 568.5 1043.6 573.6 1047.4 577.5 1053.9M599.5 1108.2 589.1 1102.6 565.0 1097.8M565.0 1097.8 566.4 1092.1 570.5 1090.4M586.2 994.1 565.7 994.8M573.5 720.8 565.8 710.3M573.5 932.7 565.8 933.1M565.8 207.9 576.6 207.7M578.3 763.9 567.3 760.3M568.3 984.7 568.0 978.7M570.5 975.0 567.0 975.0 568.0 978.7M568.0 978.7 570.6 978.7M569.3 572.8 577.7 574.6 581.4 573.5 582.8 568.2 578.4 564.6M569.3 572.8 569.5 561.3M578.4 564.6 569.5 561.3M570.5 1090.4 569.8 1085.0M570.5 975.0 570.3 971.8M570.6 978.7 570.5 975.0M570.5 1090.4 584.0 1092.2M570.6 686.0 583.6 683.5M570.6 978.7 576.0 978.5M590.2 810.3 586.2 810.9 580.2 807.6 574.9 798.3 571.0 796.0M582.1 787.6 575.6 790.2 571.0 796.0M571.5 351.3 576.3 352.2 582.7 358.6 590.9 358.6M572.7 699.3 577.8 697.6 583.2 692.8 583.6 683.5M593.4 895.0 590.3 887.3 582.9 884.3 580.4 876.6 573.3 876.2M573.3 393.0 616.9 391.0M584.5 759.9 575.4 743.9 575.7 727.2 573.5 722.3M573.5 722.3 577.8 721.8 580.8 722.3 585.4 729.9 591.7 734.6 602.5 737.7M574.0 416.7 532.7 418.5 533.0 424.4 545.4 429.2 550.9 428.1 554.3 431.1 555.9 429.5 574.8 427.0M575.5 1009.9 574.7 1017.8M575.2 429.6 588.5 424.3M585.2 976.2 575.9 976.5M589.9 859.8 576.6 859.5M577.1 439.9 609.2 432.5M590.1 850.3 577.3 846.6M587.9 942.7 582.3 932.5 577.7 932.5M578.0 1126.4 607.6 1153.5 617.6 1156.0M645.9 1154.8 634.9 1146.2 604.4 1137.7 580.3 1126.3 578.0 1126.4M582.1 787.6 574.5 783.2 578.8 769.0 578.3 763.9M585.1 762.4 578.3 763.9M578.4 564.6 580.3 559.4M594.5 949.6 594.7 958.3 579.0 959.0M586.3 1151.9 580.7 1156.2M581.1 947.5 594.5 949.6M581.1 1012.2 580.7 1020.2 583.0 1027.9 587.3 1029.3M585.7 490.2 581.7 490.7M581.7 490.7 583.3 498.5 589.9 511.1M581.7 490.7 557.0 491.2 550.4 493.7 548.6 506.5 549.3 525.4 559.4 531.1 561.1 540.7 565.4 544.5 583.7 542.7 585.4 540.4 586.1 532.3M598.7 785.5 586.7 787.5 584.7 787.7 582.1 787.6M590.2 810.3 579.8 792.8 582.1 787.6M597.3 146.6 582.5 132.9M582.5 132.9 586.8 127.6M583.6 683.5 581.8 670.2 590.2 663.6M583.6 683.5 600.0 682.4M587.1 1096.2 584.0 1092.2M584.5 843.7 587.9 839.7 582.7 834.6 584.0 822.6 592.2 816.1 597.6 816.2M585.1 762.4 584.5 759.9M604.1 750.3 596.3 751.8 584.5 759.9M585.7 490.2 584.7 487.6M584.7 487.6 579.2 475.5 590.1 474.1M584.7 487.6 586.1 487.1M598.7 785.5 589.9 784.3 586.0 781.3 585.1 762.4M593.3 976.0 592.2 972.1 587.4 970.0 585.1 971.5 585.2 976.2M593.3 976.0 585.2 976.2M596.9 488.0 585.7 490.2M586.2 994.1 585.9 984.0M588.6 514.2 585.4 514.6 584.1 517.1 586.1 532.3M586.1 532.3 603.3 528.9 614.6 524.1M588.4 1029.2 586.2 994.1M595.9 993.8 586.2 994.1M586.8 127.6 597.7 134.4M586.8 127.6 611.7 95.5M592.3 938.2 588.3 933.3 586.8 927.1M587.3 1029.3 587.9 1034.0 595.3 1040.6M587.3 1029.3 588.4 1029.2M588.4 1029.2 589.6 1029.2 590.9 1029.6 593.5 1031.8 599.3 1042.6 606.7 1048.6M588.5 424.3 587.7 407.2 604.7 405.3M588.5 424.3 604.0 418.2 604.7 405.3M591.3 514.3 588.6 514.2M589.9 511.1 588.6 514.2M590.1 850.3 589.9 859.8M605.1 860.2 601.3 859.6 589.9 859.8M589.9 511.1 591.3 514.3M590.5 848.7 590.1 850.3M599.9 680.2 590.2 663.6M590.2 663.6 597.7 660.0 617.2 660.2 620.3 658.7M597.6 816.2 595.2 811.2 593.2 810.0 590.2 810.3M590.9 358.6 591.4 371.9M590.9 358.6 616.3 357.4 629.3 353.0 647.9 352.2M610.0 515.1 591.3 514.3M591.9 224.4 591.3 201.1M591.3 201.1 592.2 170.5 597.3 146.6M591.3 201.1 611.5 200.3M591.4 371.9 592.7 381.8 612.8 381.0M591.4 371.9 611.6 371.0 612.8 381.0M595.4 978.0 595.3 975.9 593.3 976.0M594.5 949.6 602.5 947.3M614.3 998.4 596.1 999.0M608.1 1006.6 596.3 1007.1M610.0 158.4 597.3 146.6M599.4 817.8 597.6 816.2M597.7 134.4 606.3 136.4 612.8 133.2 629.4 111.2 631.1 96.5M597.7 134.4 602.2 122.1 618.2 100.6M600.7 787.1 598.7 785.5M601.7 783.4 598.7 785.5M607.3 821.2 599.4 817.8M608.5 827.5 600.5 826.1 599.4 817.8M599.8 473.2 627.1 471.7M600.0 682.4 599.9 680.2M599.9 680.2 602.1 675.0 607.1 671.0M601.2 719.9 600.0 682.4M600.0 682.4 610.3 681.5M604.3 797.9 600.7 787.1M600.7 787.1 601.7 783.4M600.9 980.9 601.1 985.9M608.4 1017.1 601.2 1017.5M602.5 737.7 601.2 719.9M601.2 719.9 621.6 707.4M601.7 783.4 609.7 784.2 629.3 774.4M603.4 780.4 601.7 783.4M604.1 750.3 602.5 737.7M602.5 737.7 614.4 736.4 620.7 729.6 632.2 723.1 636.3 711.4 657.8 670.4M607.5 1180.7 603.2 1183.9M603.4 780.4 604.1 750.3M617.7 766.3 603.4 780.4M603.8 849.1 602.5 841.8 608.9 834.3M616.6 753.8 604.1 750.3M607.3 821.2 604.3 797.9M604.3 797.9 616.3 796.3M604.7 405.3 616.6 404.2 616.9 391.0M625.7 839.6 627.4 857.8 612.8 862.7 605.1 860.2M605.1 860.2 605.2 855.1M605.2 855.1 609.6 857.6 616.5 857.5 618.3 855.4 618.2 851.0M605.2 855.1 605.7 849.7M606.7 1048.6 611.2 1053.6 610.5 1055.3M614.8 1039.0 606.7 1048.6M610.3 681.5 607.1 671.0M607.1 671.0 616.7 665.1 620.3 658.7M614.1 823.2 607.3 821.2M608.5 827.5 607.3 821.2M608.4 1017.1 608.1 1006.6M614.6 1005.9 608.1 1006.6M615.4 944.4 616.7 911.1 611.0 907.8 608.4 876.3M608.9 1030.9 608.4 1017.1M608.9 834.3 608.5 827.5M612.7 834.5 608.9 834.3M609.2 432.5 610.7 447.0M609.2 432.5 621.7 427.3 632.0 427.0M622.1 169.6 610.0 158.4M610.0 158.4 633.7 128.9M621.6 707.4 616.5 701.7 610.3 681.5M610.3 681.5 623.7 673.7 646.4 670.6M612.1 220.4 611.5 200.3M611.5 200.3 611.6 174.0 619.9 171.9 622.1 169.6M618.2 100.6 611.7 95.5M611.7 95.5 624.6 70.2 624.2 34.5M612.0 223.9 612.1 220.4M628.9 219.6 627.5 220.8 612.1 220.4M619.2 845.7 612.7 834.5M625.3 833.9 612.7 834.5M612.8 381.0 647.7 379.1 648.5 365.8M613.5 974.2 615.3 973.1M615.3 973.1 613.8 971.7M624.7 832.3 620.4 827.0 614.1 823.2M633.0 823.7 626.1 813.7 621.9 812.2 617.0 815.1 614.1 823.2M614.4 1190.2 625.2 1186.2M614.7 1009.5 622.8 1009.3M614.9 576.6 609.0 578.7 601.9 578.3 599.5 571.7 610.3 567.6 614.9 576.6M614.9 576.6 638.8 567.3 633.9 555.5 634.4 552.0 648.6 546.2 669.2 544.4M631.5 973.6 628.3 972.7 615.3 973.1M622.6 1037.3 615.5 1028.0M619.2 845.7 616.1 850.7M621.4 757.0 616.6 753.8M616.6 753.8 619.4 749.6 627.9 745.0M616.9 391.0 645.7 389.3M622.6 1037.3 616.9 1041.1M625.8 1171.7 618.9 1167.0 617.6 1156.0M617.6 1156.0 629.1 1155.4M617.7 766.3 619.7 763.4M621.2 764.9 617.7 766.3M618.2 100.6 622.4 97.3 631.1 96.5M625.7 839.6 619.2 845.7M619.4 1241.1 640.3 1242.4 648.9 1233.8M619.6 793.7 623.4 795.3 639.6 794.4M621.2 764.9 619.7 763.4M619.7 763.4 621.4 757.0M619.9 983.7 619.7 979.0M636.0 1044.7 630.7 1041.2 620.1 1043.9M620.3 658.7 622.5 653.3M634.8 764.7 621.2 764.9M632.6 759.5 621.4 757.0M622.8 707.4 622.2 707.4 621.6 707.4M622.0 642.2 653.8 641.1 660.3 645.6 666.1 654.8M628.4 175.6 622.1 169.6M622.2 983.7 622.8 1009.3M625.4 1040.3 622.6 1037.3M622.8 1009.3 624.4 1027.7M648.5 365.8 622.8 367.2M622.9 1077.4 623.1 1072.2 635.1 1066.6M625.3 833.9 624.7 832.3M633.0 823.7 624.7 832.3M653.4 738.2 625.1 735.0M625.2 1186.2 630.5 1194.8 636.5 1195.1M625.2 1186.2 636.2 1185.3M625.7 839.6 625.3 833.9M637.9 838.4 625.7 839.6M627.1 471.7 626.9 466.8M629.9 994.5 627.0 984.6M627.7 481.5 627.1 471.7M634.1 181.0 628.4 175.6M628.4 175.6 628.9 219.6M628.9 748.1 638.9 748.2M628.9 219.6 629.4 226.9M629.3 774.4 630.5 781.2M629.3 774.4 640.4 773.3M629.4 598.4 626.3 592.9 620.4 589.8 598.4 586.8 583.0 590.2 578.8 594.3 576.9 600.0 580.0 626.3 582.0 630.8 588.8 635.6 596.0 635.2 611.4 622.6 630.2 614.8 633.1 609.0 629.4 598.4M641.9 595.9 629.4 598.4M631.4 995.8 629.9 994.5M630.8 1011.5 629.9 994.5M630.4 1028.8 630.5 1021.0M630.5 781.2 631.5 781.9 631.4 782.7 630.5 782.7 630.5 781.2M630.5 1021.0 630.8 1011.5M647.4 1016.1 630.5 1021.0M630.8 1011.5 643.4 1008.0M631.1 96.5 644.3 95.8M643.4 1008.0 631.4 995.8M643.8 996.1 636.2 995.2 631.4 995.8M640.3 978.9 631.5 973.6M631.5 973.6 631.8 982.4M632.0 427.0 648.4 426.8 649.1 436.1 646.4 449.6M632.0 427.0 633.3 463.4 646.9 463.5M637.9 838.4 637.4 830.9 633.0 823.7M646.3 820.4 633.0 823.7M633.7 128.9 659.2 145.9M633.7 128.9 642.2 116.4 644.3 107.5 644.3 95.8M664.2 213.9 649.6 196.0 634.1 181.0M634.1 181.0 638.3 179.1 660.0 178.3M643.8 1073.6 635.1 1066.6M635.1 1066.6 640.1 1060.1M668.3 1043.0 658.2 1043.5 644.8 1049.3 636.0 1044.7M636.0 1044.7 643.6 1039.2M636.5 1195.1 636.2 1185.3M636.2 1185.3 640.0 1184.9M636.7 1206.9 636.5 1195.1M644.7 840.1 637.9 838.4M651.6 983.4 640.3 978.9M643.8 996.1 640.7 991.4 640.3 978.9M643.6 1039.2 642.3 1029.7M653.1 614.5 642.5 608.3M648.8 1011.3 643.4 1008.0M666.4 339.0 647.3 339.7 644.1 335.2 643.6 324.7M643.6 1039.2 657.1 1034.2 667.8 1034.2M644.0 943.7 643.8 930.8M654.3 1003.7 643.8 996.1M644.3 95.8 659.3 94.6 664.2 96.2 667.8 100.6 668.5 108.8M645.2 492.2 650.5 488.9 649.6 479.6M645.7 389.3 648.7 396.2 662.9 396.9 665.3 403.7M645.7 389.3 667.8 386.9 667.0 353.3M646.4 449.6 646.9 463.5M646.4 449.6 668.2 448.9M646.9 463.5 668.3 462.7M650.2 1019.3 647.4 1016.1M647.4 1016.1 648.8 1011.3M647.9 352.2 667.0 353.3M648.5 365.8 647.9 352.2M657.1 1012.9 648.8 1011.3M648.9 1233.8 650.3 1228.2 649.6 1204.6 652.1 1202.2 669.0 1213.6 671.4 1219.8 669.0 1224.3 656.8 1227.3 648.9 1233.8M656.5 849.4 649.5 854.3M651.8 895.8 650.1 887.0M650.1 887.0 651.0 882.8M659.8 895.9 659.0 886.8 650.1 887.0M650.3 833.4 657.4 833.1 659.3 834.8M653.4 738.2 651.1 720.9M675.8 989.1 668.5 983.5 651.6 983.4M651.7 989.6 651.6 983.4M651.7 1087.3 660.6 1075.9M658.8 907.1 653.6 907.1 652.6 906.4 651.8 895.8M651.8 895.8 659.3 895.8 659.8 895.9M655.0 615.6 653.1 614.5M667.2 621.9 665.4 585.3 663.9 583.4 655.7 584.1 654.2 585.7 654.5 609.1 653.1 614.5M659.2 738.8 653.4 738.2M653.7 1059.5 664.4 1054.3 669.6 1047.6 669.9 1043.4M654.3 1003.7 653.9 989.6M666.7 1011.8 667.1 1007.4 664.0 1004.1 654.3 1003.7M657.1 1012.9 654.3 1003.7M654.9 902.9 653.2 902.9 653.4 906.6 658.4 906.5 658.5 902.8 657.0 902.9M657.0 902.9 657.0 901.5 654.9 902.9M657.0 902.9 654.9 902.9M667.2 621.9 655.0 615.6M655.0 615.6 656.5 627.5M656.5 849.4 657.8 850.1 658.5 849.5 657.6 848.5 656.5 849.4M668.5 108.8 659.7 110.4 656.8 118.5M658.9 1012.6 657.1 1012.9M658.5 943.3 658.8 907.1M658.8 907.1 659.8 895.9M659.2 145.9 670.0 149.9 673.6 153.3M659.2 145.9 665.9 135.9 671.0 132.7M677.6 896.8 659.8 895.9M660.0 178.3 660.4 165.7 691.5 164.0M660.0 178.3 681.5 176.5 689.4 170.4 691.5 164.0M661.1 989.4 661.3 995.9M728.8 277.3 720.4 275.5 699.2 246.7 664.2 213.9M664.2 213.9 671.2 208.2 685.9 216.5 705.0 215.6 709.8 213.3M666.4 339.0 666.1 324.9M667.2 658.0 666.1 654.8M666.1 654.8 676.4 651.2 694.6 650.9 694.2 665.6M667.0 353.3 666.4 339.0M686.1 1013.8 671.5 1015.2 666.7 1011.8M667.8 1034.2 666.7 1011.8M667.2 621.9 668.3 623.0M667.2 621.9 678.8 612.8M668.3 1043.0 667.8 1034.2M668.3 462.7 668.4 468.5M668.4 458.0 668.3 462.7M721.2 619.6 707.1 624.2 673.2 625.1 668.3 623.0M668.3 623.0 668.3 634.2 670.2 637.3 728.4 633.8M669.9 1043.4 668.3 1043.0M668.4 1069.6 689.3 1082.7M668.4 458.0 674.4 458.4 679.4 462.0 686.2 461.5 688.4 458.4 689.5 446.9M668.5 454.2 668.4 458.0M668.5 108.8 671.0 132.7M669.0 803.2 670.8 821.3 668.5 828.9 679.7 831.2M677.6 1045.5 669.9 1043.4M671.0 132.7 690.2 131.7M682.5 729.6 678.1 731.0 673.6 735.4 672.7 741.5M676.4 1003.6 685.8 1003.4M678.8 612.8 676.5 582.8M678.8 612.8 689.2 611.4M678.9 1068.1 699.9 1062.4M679.9 1088.4 689.3 1082.7M694.2 665.6 682.1 666.1M682.2 447.4 681.0 446.2 680.0 446.9 681.0 448.4 682.2 447.4M689.5 446.9 682.2 447.4M691.2 943.4 690.9 946.4 683.5 956.6M686.1 1013.8 685.8 1003.4M685.8 1003.4 695.2 1003.0 695.5 1013.5M686.4 1026.4 686.1 1013.8M695.5 1013.5 686.1 1013.8M687.5 478.6 687.2 490.2 698.2 490.2M689.5 446.9 689.0 433.9M689.2 611.4 700.8 611.9M717.8 601.9 711.7 594.9 710.4 582.9 689.1 583.5 689.2 611.4M689.3 1082.7 703.1 1091.1M689.3 1082.7 689.3 1072.2M689.3 1082.7 700.4 1077.3M725.9 445.7 689.5 446.9M691.5 164.0 690.2 131.7M690.2 131.7 703.1 133.8 720.0 133.2M692.0 907.1 703.0 906.9M697.6 815.4 698.1 823.7 693.5 831.2M694.2 665.6 694.2 670.0M695.9 1026.6 695.5 1013.5M703.1 1013.3 695.5 1013.5M698.2 490.2 698.7 484.4 708.0 482.9M698.2 490.2 759.9 487.8M699.9 1062.4 699.6 1056.2M699.8 987.7 701.5 997.2 705.6 1001.7M700.4 1077.3 699.9 1062.4M699.9 1062.4 706.0 1061.6M700.8 611.9 700.1 594.7M708.3 1083.2 700.4 1077.3M700.4 1077.3 710.6 1074.0 732.8 1073.2M700.8 611.9 706.9 610.4 717.8 601.9M703.0 906.9 702.5 917.6M708.2 917.6 708.1 908.6 703.0 906.9M703.6 1026.7 703.1 1013.3M703.1 1013.3 706.0 1013.2 706.9 1013.7 707.2 1019.4 710.4 1025.7 711.2 1046.2M716.5 1115.7 708.4 1121.4 703.5 1118.6M704.9 814.4 720.7 814.2 725.8 819.3 725.9 824.5 723.4 828.0 709.8 830.9M736.0 900.5 726.4 906.6 719.8 907.8 713.7 905.7 705.1 896.3M705.6 1001.7 712.1 1009.9M718.0 1006.7 711.0 998.3 705.6 1001.7M706.0 1061.6 707.8 1059.9 716.6 1059.0 718.8 1063.0 708.0 1064.7 706.0 1061.6M733.7 689.9 710.8 671.7 708.6 656.7M708.6 656.7 709.0 646.8 728.7 647.0M739.9 676.7 716.1 657.4 714.1 656.6 708.6 656.7M709.8 213.3 699.6 200.1 699.0 196.6 701.3 191.9 713.3 190.9 715.3 193.8 717.7 207.6M709.8 213.3 717.7 207.6M712.1 1009.9 717.1 1019.2M712.1 1009.9 718.0 1006.7M723.3 884.4 714.3 881.8M717.1 1019.2 718.3 1027.5M717.1 1019.2 722.9 1015.9M734.5 205.9 717.7 207.6M717.8 601.9 722.9 592.9 721.5 574.0M722.9 1015.9 718.0 1006.7M728.1 622.7 721.2 619.6M721.2 619.6 723.7 609.2M734.5 716.9 721.6 717.4M722.4 860.1 721.6 852.7 728.5 853.5 731.6 857.1M723.2 940.2 722.7 917.8M724.6 1010.5 722.9 1015.9M723.1 214.6 742.0 213.5M723.3 884.4 721.7 872.1 727.4 871.7M729.2 884.1 723.3 884.4M723.6 228.1 742.6 229.6M724.6 247.5 769.0 245.3 772.7 241.1 772.8 228.6M731.7 1108.1 726.0 1103.3 725.6 1100.5M725.9 445.7 726.1 448.7M758.2 444.5 725.9 445.7M726.1 448.7 701.5 449.4 699.5 451.3 699.9 455.4 707.2 458.9 724.3 458.2 726.5 456.0 726.1 448.7M731.2 1088.0 727.9 1089.0M782.8 636.4 768.0 636.7 760.0 623.1 728.1 622.7M728.4 633.8 728.1 622.7M728.7 647.0 728.4 633.8M728.7 647.0 730.3 647.0 735.1 647.0 739.0 646.8M729.4 200.1 734.2 199.9M735.9 960.5 735.0 951.7 730.3 947.7M739.0 1103.5 731.2 1088.0M739.0 1103.5 745.0 1098.8 738.4 1086.3 731.2 1088.0M732.3 1119.5 731.7 1108.1M731.7 1108.1 739.0 1103.5M732.6 899.7 736.0 900.5M732.8 171.0 732.2 151.3 741.6 150.1M733.0 1152.6 737.8 1156.2 743.5 1152.8 747.2 1153.3 772.5 1176.4M734.5 716.9 733.7 689.9M733.7 689.9 738.8 682.9 739.9 676.7M734.5 205.9 734.2 199.9M734.2 199.9 741.4 199.7 741.5 205.1M741.5 205.1 734.5 205.9M735.1 727.9 734.5 716.9M748.1 716.3 734.5 716.9M736.0 900.5 744.0 897.6 760.2 905.4 769.9 904.7 777.6 896.2 785.8 873.1 794.5 863.9 808.4 860.0 821.2 864.5M739.9 676.7 739.0 646.8M739.0 646.8 750.7 646.6M742.1 1112.2 739.0 1103.5M742.0 213.5 741.5 205.1M742.6 229.6 756.7 228.5 755.8 204.6 753.7 203.4 741.5 205.1M742.8 170.5 741.6 150.1M753.3 150.3 741.6 150.1M742.6 229.6 742.0 213.5M742.6 1118.8 742.1 1112.2M742.1 1112.2 747.2 1109.9M743.8 170.5 744.3 187.3 745.9 188.7 756.5 187.3 755.8 169.9M767.6 982.2 751.2 978.5 746.8 980.9M748.1 716.3 747.6 700.8M766.5 715.6 748.1 716.3M750.7 646.6 750.9 663.7 763.7 664.4 767.3 661.7 767.5 646.1M750.7 646.6 767.5 646.1M751.6 833.1 775.2 831.9M752.3 850.1 766.2 850.6M752.4 1118.2 754.6 1130.8 756.8 1134.2M752.9 855.7 761.8 864.7M754.4 170.0 753.3 150.3M753.3 150.3 753.9 148.5M753.9 148.5 751.8 144.8 754.1 143.4 755.7 144.2 753.9 148.5M754.1 700.6 754.2 689.0M754.2 689.0 756.0 679.0 770.7 678.5M754.2 689.0 763.3 688.9M754.3 792.8 809.7 789.6 819.7 784.2 834.9 762.7M755.7 316.6 760.5 318.1 767.6 315.0 767.0 310.1 765.3 308.2 754.4 314.5M756.8 1134.2 770.3 1145.6M756.8 1134.2 762.0 1129.3 778.3 1129.6M770.3 1145.6 761.8 1155.6M767.7 547.2 795.4 546.5 793.8 552.5 794.2 569.8 763.6 571.9M766.1 1185.0 764.0 1185.0 763.5 1186.6 765.1 1187.0 766.1 1185.0M772.5 1176.4 766.1 1185.0M767.5 646.1 784.0 645.6M770.3 1145.6 777.7 1150.1 792.0 1148.5 789.0 1136.1 778.0 1137.3 770.3 1145.6M772.5 1176.4 784.7 1184.9 790.9 1192.8M782.4 1177.5 778.1 1173.6 772.5 1176.4M803.7 911.9 789.8 916.4 785.6 906.1 773.6 908.9M778.2 1017.7 775.2 1018.1M775.5 1018.8 778.2 1017.7M783.5 668.5 775.6 668.3M778.2 1017.7 798.3 1017.1M843.7 497.0 834.0 507.1 829.8 508.9 811.1 509.0 796.6 512.7 788.4 511.2 782.6 507.0 778.4 499.2 777.9 493.6 780.8 481.9 780.2 473.4M785.2 1176.0 784.1 1177.4 783.6 1177.5 782.4 1177.5M782.4 1177.5 783.8 1178.5 786.4 1177.0M793.7 671.9 783.3 670.0M790.9 1192.8 793.0 1193.5 793.0 1195.4 791.1 1195.2 790.9 1192.8M797.1 167.9 796.1 159.4M796.1 159.4 797.7 156.7 795.5 155.5 794.0 158.2 796.1 159.4M798.3 1017.1 800.9 1015.2 800.5 1013.2 798.5 1013.7 798.3 1017.1M798.4 1098.4 801.8 1098.8 824.9 1120.3M804.7 443.7 804.8 451.4 801.8 455.6 801.8 466.5 804.2 472.4M805.4 624.1 805.3 615.4M805.4 624.1 807.7 698.8M822.1 623.6 805.4 624.1M805.9 1049.7 809.9 1038.6M809.9 1038.6 826.6 1043.0 826.2 1036.1 822.3 1035.5 819.3 1033.2 819.5 1031.2 813.6 1029.6M809.9 1038.6 813.6 1029.6M813.6 1029.6 815.4 1020.4M815.4 1020.4 815.3 1015.9M823.6 1019.4 818.4 1020.4 815.4 1020.4M821.4 698.4 820.8 683.3M821.2 864.5 835.7 876.8 841.9 878.3 852.0 873.5 869.4 869.7 870.7 865.0 865.7 856.3 867.1 846.9 871.9 846.7 880.5 855.7M821.2 864.5 820.6 870.1 828.6 876.2 834.5 885.2 844.4 888.0 849.1 893.1 862.4 896.7 871.7 894.6 882.8 885.9 894.3 881.1 896.4 877.3 896.2 872.6 894.1 868.1 890.4 866.4M822.1 623.6 821.7 615.3M822.4 662.1 822.1 623.6M835.9 623.2 822.1 623.6M822.4 662.1 820.9 664.9 819.8 664.7 819.7 663.9 822.4 662.1M824.9 1120.3 860.3 1155.2M824.9 1120.3 828.1 1112.7M831.3 674.4 840.7 674.8 858.1 674.2M831.6 685.0 831.3 674.4M831.3 674.4 831.5 664.0M831.5 664.0 833.6 653.8 846.7 652.7M831.5 664.0 857.8 663.5M832.0 698.0 831.6 685.0M831.6 685.0 858.5 684.8M835.4 606.8 835.6 613.1M835.4 606.8 835.0 588.6 840.6 587.2M841.4 606.4 835.4 606.8M835.6 613.1 835.9 623.2M835.6 613.1 846.3 612.9M847.1 642.3 836.7 641.4 835.9 623.2M840.6 587.2 841.4 606.4M846.8 606.2 846.4 588.7 844.7 587.0 840.6 587.2M846.8 606.2 841.4 606.4M855.0 162.0 853.2 140.6 847.4 127.5 841.8 119.8M844.8 1158.5 849.2 1158.4M847.1 642.3 846.3 612.9M846.3 612.9 846.8 606.2M857.4 652.8 846.7 652.7M846.7 652.7 847.1 642.3M849.3 1169.4 849.2 1158.4M849.2 1158.4 856.8 1157.8 860.3 1155.2M853.9 1188.3 848.2 1180.2 849.3 1169.4M864.9 1175.4 858.4 1169.4 849.3 1169.4M860.0 1203.9 858.6 1195.8 853.9 1188.3M853.9 1188.3 864.9 1175.4M857.8 663.5 857.4 652.8M868.1 652.3 857.4 652.8M858.1 674.2 857.8 663.5M858.5 684.8 858.1 674.2M858.5 684.8 866.0 684.8 869.0 685.1M860.9 1215.0 860.0 1203.9M878.0 1202.5 860.0 1203.9M860.3 1155.2 879.2 1173.8 885.3 1177.5M869.3 1250.0 873.7 1244.5 874.2 1240.8 862.9 1222.6 860.9 1215.0M860.9 1215.0 886.1 1212.9 896.7 1217.1M881.0 1187.8 874.6 1184.9 864.9 1175.4M869.0 685.1 868.1 652.3M875.0 650.3 868.1 652.3M869.0 685.1 876.2 685.5M900.8 636.5 874.9 636.3M878.0 1202.5 877.7 1197.0 881.0 1187.8M905.7 1207.3 889.8 1201.8 878.0 1202.5M880.5 855.7 888.2 857.3 890.4 859.6M890.4 866.4 882.0 866.0 879.9 861.7 880.5 855.7M916.6 1198.8 881.0 1187.8M881.0 1187.8 885.3 1177.5M885.3 1177.5 895.1 1181.0M912.3 955.7 887.0 957.4M890.4 859.6 890.4 866.4M907.5 880.3 903.9 872.2 906.8 870.6 901.3 859.9 898.3 858.2 890.4 859.6M895.1 1181.0 915.9 1188.2M898.1 1170.4 895.1 1181.0M898.1 1170.4 915.3 1177.2M915.3 1177.2 914.4 1160.0 912.3 1156.4 900.0 1156.7 898.1 1170.4M937.7 643.4 901.1 644.0M901.6 660.4 919.2 659.7 927.4 657.1M905.4 1208.9 905.7 1207.3M905.7 1207.3 906.4 1204.5M1067.5 947.9 977.8 958.3 911.9 949.6M915.9 1188.2 917.3 1182.5 915.3 1177.2M915.9 1188.2 917.3 1188.7M992.5 793.9 991.4 791.1 988.5 790.2 979.2 793.5 973.6 792.4 953.0 770.5 935.8 724.5 916.6 693.0M916.6 1198.8 916.8 1200.7M917.3 1188.7 916.6 1198.8M917.3 1188.7 937.7 1195.4M928.3 1081.2 931.0 1069.2M930.1 1225.1 928.6 1225.2M929.6 1214.6 929.5 1211.5M930.1 1225.1 929.6 1214.6M929.6 1214.6 930.5 1214.6 931.2 1214.7 935.5 1216.0 937.0 1215.4 937.7 1195.4M931.4 1225.1 930.1 1225.1M937.7 1195.4 1001.2 1203.4 1037.7 1217.4 1067.5 1210.7M388.7 931.9 390.5 931.6 390.5 932.4 388.8 932.4 388.7 931.9M494.4 1013.2 495.6 1013.2 495.7 1016.3 494.5 1016.4 494.4 1013.2M504.4 981.0 504.4 982.3 505.6 982.3 505.3 981.0 504.4 981.0M504.4 983.0 505.9 983.0 505.9 984.5 503.7 984.5 504.4 983.0M612.3 522.9 612.3 523.5 612.6 523.9 612.8 522.7 612.3 522.9M613.5 526.0 613.2 526.5 614.5 526.4 614.2 526.2 613.5 526.0M638.5 568.4 638.8 569.0 638.2 569.4 638.2 568.9 638.5 568.4M726.9 900.4 727.2 899.8 727.8 900.1 727.5 900.8 726.9 900.4M863.6 879.9 864.5 879.4 864.8 880.1 863.9 880.5 863.6 879.9"/>
+<path class="m-mid" d="M133.0 351.8 115.5 324.7 108.7 308.7 104.3 224.7 101.9 212.4 96.4 199.2 82.6 175.7 63.1 154.2 45.5 122.4 31.3 103.8 22.6 95.0 0.0 79.3M133.0 351.8 83.3 328.7 66.2 328.1 58.3 331.0 23.7 359.0 10.7 365.3 0.0 367.1M253.2 1197.4 188.6 1198.9 165.3 1189.8 152.8 1181.7 118.8 1169.0 82.7 1166.6 71.0 1164.0 60.9 1166.7 42.1 1175.6 15.6 1177.2 0.0 1183.8M100.8 696.6 128.3 695.6 145.6 687.5M391.8 1007.2 392.8 1004.5 388.9 978.0 378.2 961.2 376.2 952.9 382.2 918.4 393.2 889.2 392.4 878.6 386.1 870.3 364.0 861.3 351.0 849.1 331.5 804.3 293.1 739.4 241.8 638.7 212.7 570.3 189.5 493.2 170.2 440.2 163.6 410.3 148.3 376.2 133.0 351.8M404.7 976.7 459.2 974.6M558.8 776.4 560.2 764.8 554.2 744.6 552.9 730.4 528.1 670.2 518.5 636.9 507.8 616.6 502.6 599.5 497.2 570.1 491.4 562.8 481.2 557.8 477.2 548.7 478.7 532.1 484.7 520.1 478.2 515.6 470.3 506.3 468.8 492.6 439.9 450.0 426.5 425.4 408.9 384.3 410.4 366.6M410.9 954.2 458.3 952.3M412.3 357.8 571.5 351.3M421.8 946.7 486.6 909.1M423.4 990.5 459.7 988.9M424.2 1010.2 460.4 1008.7M428.4 1040.0 425.2 1038.0M425.3 1042.2 428.4 1040.0M426.0 1130.5 431.0 1130.8 464.3 1105.6M461.5 1038.3 428.4 1040.0M433.4 1335.3 418.2 1303.0 406.7 1267.8 408.5 1205.9 417.6 1179.0 478.9 1098.5M459.2 974.6 458.3 952.3M458.3 952.3 476.4 951.6M459.7 988.9 459.2 974.6M459.2 974.6 477.3 973.9M460.4 1008.7 459.7 988.9M459.7 988.9 477.8 988.2M461.5 1038.3 460.4 1008.7M460.4 1008.7 478.5 1007.9M464.3 1105.6 461.5 1038.3M461.5 1038.3 479.6 1037.5M464.3 1105.6 475.5 1097.3M464.6 872.7 468.5 877.9M486.6 909.1 468.5 877.9M468.5 877.9 483.1 870.5 494.9 868.5M470.9 1258.7 494.0 1164.5 497.4 1153.4 506.9 1134.0M478.5 1094.6 475.5 1097.3M475.5 1097.3 479.0 1095.6M477.3 973.9 476.4 951.6M476.4 951.6 498.7 950.7M477.8 988.2 477.3 973.9M477.3 973.9 499.5 973.0M477.8 988.2 478.5 1007.9M477.8 988.2 500.0 987.3M478.5 1094.6 479.0 1095.6M480.0 1092.9 478.5 1094.6M478.5 1007.9 479.6 1037.5M478.5 1007.9 500.7 1006.9M479.5 1096.0 478.9 1098.5M478.9 1098.5 480.5 1096.0M479.5 1096.0 480.0 1096.1 480.5 1096.0M481.3 1090.4 479.6 1037.5M479.6 1037.5 501.8 1036.5M481.0 1093.2 480.0 1092.9M481.3 1090.4 480.0 1092.9M480.5 1096.0 481.7 1094.5M481.0 1093.2 481.3 1090.4M481.7 1094.5 481.3 1093.4M483.6 1092.2 481.3 1093.4M481.7 1094.5 483.6 1092.2M483.6 1092.2 502.1 1061.7 501.8 1036.5M496.9 908.7 486.6 909.1M496.9 908.7 494.9 868.5M507.9 752.9 496.7 761.8 491.0 778.7 494.9 868.5M512.9 867.7 494.9 868.5M498.7 950.7 496.9 908.7M496.9 908.7 514.8 908.0M499.5 973.0 498.7 950.7M500.0 987.3 499.5 973.0M499.5 973.0 517.6 972.3M500.0 987.3 500.7 1006.9M500.0 987.3 518.2 986.6M500.7 1006.9 501.8 1036.5M535.6 1028.5 519.8 1036.0 501.8 1036.5M507.9 752.9 505.7 747.3M506.9 1134.0 538.1 1118.8 556.1 1118.0 565.0 1122.8M506.9 1134.0 535.6 1075.7 536.9 1058.9M536.8 866.5 535.6 849.9 514.6 817.8 514.6 812.3 520.0 801.1 521.1 792.1 507.9 752.9M514.8 908.0 512.9 867.7M522.7 867.2 512.9 867.7M517.6 972.3 514.8 908.0M514.8 908.0 524.7 907.6M518.2 986.6 517.6 972.3M517.6 972.3 527.2 971.9M518.6 996.5 518.2 986.6M518.2 986.6 527.8 986.2M524.7 907.6 522.7 867.2M536.8 866.5 522.7 867.2M527.2 971.9 524.7 907.6M527.8 986.2 527.2 971.9M527.2 971.9 537.2 971.5 537.9 965.4 541.5 959.8 541.1 952.3 546.5 948.4 550.1 917.8 554.0 900.3 557.7 893.8M528.5 1005.8 527.8 986.2M527.8 986.2 576.3 984.4M539.9 1007.5 528.5 1005.8M534.0 1019.8 528.5 1005.8M555.8 1047.8 556.5 1038.9 550.4 1024.2 534.0 1019.8M535.6 1028.5 534.0 1019.8M536.9 1058.9 535.6 1028.5M557.7 893.8 550.9 879.1 537.9 877.8 536.8 866.5M536.9 1058.9 557.3 1058.1M538.9 1010.9 539.9 1007.5M544.3 1008.2 539.9 1007.5M539.9 1007.5 540.1 1002.6M557.3 1058.1 555.8 1047.8M555.8 1047.8 566.0 1047.0 574.6 1038.1 587.6 1062.9 598.2 1074.8 629.1 1077.6 656.1 1090.1 662.7 1091.0 676.4 1077.8 678.8 1073.1 677.0 1026.0M557.3 1058.1 561.8 1079.2 554.7 1106.9 565.0 1122.8M557.7 893.8 564.5 897.7 571.9 898.5M557.7 893.8 563.5 886.7 568.1 885.3M569.2 837.4 569.7 832.5 567.2 825.3 570.2 818.2 569.2 807.6 561.3 791.4 558.8 776.4M558.8 776.4 568.7 768.8 566.7 740.4 572.6 725.7 574.1 714.6 568.9 670.0 572.6 662.3 585.5 650.2 612.5 650.3 654.2 666.6M570.3 327.9 559.2 36.4M565.0 1122.8 619.2 1196.7 631.8 1222.9 672.4 1271.7M571.9 898.5 571.6 891.1 568.1 885.3M568.1 885.3 566.9 871.4 568.9 869.5 575.6 868.5 576.7 860.6 569.3 854.0 567.2 843.0 569.2 837.4M569.2 837.4 584.5 843.7 590.5 848.7 599.1 848.1 618.2 851.0 638.4 849.6 643.7 851.2 647.7 855.8M571.5 351.3 570.3 327.9M570.3 327.9 648.6 324.5 698.9 324.6 728.3 322.3M596.9 488.0 582.0 457.8 577.9 444.4 574.1 420.7 571.5 351.3M571.9 898.5 581.6 898.8 588.7 898.1M580.0 949.2 572.8 929.8 571.9 898.5M576.3 984.4 577.3 1009.9M580.0 949.2 576.0 973.9 576.3 984.4M576.3 984.4 595.6 983.6M596.5 931.0 590.4 940.6 580.0 949.2M588.7 898.1 593.9 899.7M588.7 898.1 593.4 895.0M593.4 895.0 593.9 899.7M593.4 895.0 604.0 876.5 632.3 874.8 639.8 876.1M593.9 899.7 594.4 925.7 596.5 931.0M595.8 1023.6 595.6 983.6M595.6 983.6 595.4 978.0 597.3 977.9 604.5 984.0 613.8 983.9M615.4 944.4 607.9 940.7 602.6 931.3 599.3 930.2 596.5 931.0M640.6 576.9 596.9 488.0M596.9 488.0 632.3 480.6 636.5 481.4 658.6 511.3 659.3 517.4 656.1 529.4 657.5 531.2 723.9 520.9 760.9 518.6M613.8 983.9 615.5 1028.0M615.4 944.4 613.0 961.5 613.8 983.9M675.8 989.1 644.3 989.8 624.1 983.7 613.8 983.9M635.4 944.3 627.0 944.6 615.4 944.4M634.3 917.5 740.1 917.8M634.3 917.5 635.4 944.3M639.8 876.1 635.0 879.5 633.1 883.6 634.3 917.5M635.4 944.3 644.0 943.7M725.5 858.2 719.5 863.5 714.3 881.8 707.9 893.3 702.9 897.0 693.5 896.2 686.0 892.5 680.7 883.4 677.2 881.4 653.0 880.2 639.8 876.1M647.8 861.8 646.1 869.7 639.8 876.1M641.9 595.9 640.6 576.9M640.6 576.9 641.2 594.2 641.9 595.9M640.6 576.9 669.7 574.8 669.2 544.4 713.1 540.6 715.4 542.4 716.5 568.7 718.2 573.8 763.6 571.9M654.2 666.6 647.2 647.0 644.2 631.3 641.9 595.9M677.0 1026.0 656.9 1024.9 642.8 1028.9M687.5 965.7 671.3 969.1 649.8 964.9 645.3 958.4 644.0 943.7M644.0 943.7 704.6 943.7 720.5 940.1 741.6 942.8M647.7 855.8 651.0 849.7 644.7 840.1 650.3 833.4 646.3 820.4M646.3 820.4 639.4 797.9 641.8 785.5 641.5 776.5 630.0 752.1 622.8 726.6 621.7 715.7 626.6 695.6 636.3 677.7 643.8 671.6 657.0 669.5M646.3 820.4 668.0 814.6 688.6 816.2 704.9 814.4M647.8 861.8 647.7 855.8M709.8 830.9 707.0 833.0 709.4 844.2 705.6 852.9 669.7 854.4 654.2 862.6 647.8 861.8M657.0 669.5 654.2 666.6M670.1 681.6 657.0 669.5M672.5 683.2 670.1 681.6M670.1 681.6 671.5 685.2M704.9 814.4 693.0 774.1 690.1 756.7 671.5 685.2M671.5 685.2 672.5 683.2M771.5 700.0 730.0 701.7 716.0 700.2 688.2 692.8 672.5 683.2M677.0 1026.0 675.8 989.1M675.8 989.1 729.5 987.1 736.4 989.3 756.1 1002.1 763.7 1002.8 769.1 1001.0M783.7 1042.9 761.3 1033.0 747.0 1029.3 677.0 1026.0M709.8 830.9 704.9 814.4M738.0 854.1 732.9 848.0 726.1 844.2 713.4 841.2 709.8 830.9M721.5 171.5 717.1 58.2M728.3 322.3 721.5 171.5M978.6 153.6 883.9 157.9 818.1 166.6 721.5 171.5M800.7 1116.5 721.6 1120.6M740.1 917.8 739.0 911.7 730.7 894.0 725.5 858.2M725.5 858.2 738.0 854.1M759.4 475.0 756.1 402.0 751.6 389.6 732.3 360.6 729.6 349.3 728.3 322.3M728.3 322.3 736.0 319.9 756.6 318.2M756.6 318.2 747.6 303.0 737.9 280.9 734.9 278.3 728.8 277.3M735.9 960.5 744.7 978.5 752.7 986.4 763.7 992.9 769.1 1001.0M752.2 868.2 738.0 854.1M773.6 935.6 763.1 918.4 740.1 917.8M740.1 917.8 741.6 942.8M741.6 942.8 742.5 948.5 749.6 959.0M741.6 942.8 760.0 941.4 773.6 935.6M772.5 880.0 764.4 873.9 757.1 873.9 752.2 868.2M752.2 868.2 753.9 864.7 751.1 815.0 766.2 716.7 771.5 700.0M892.3 379.9 854.0 381.3 840.3 369.7 822.3 360.5 811.6 356.6 780.1 353.0 765.0 339.1 762.9 330.2 756.6 318.2M759.4 475.0 759.5 476.8M783.0 473.2 759.4 475.0M759.5 476.8 760.9 518.6M759.5 476.8 800.1 473.1M760.9 518.6 763.6 571.9M763.6 571.9 765.3 600.0 780.6 629.3 783.9 644.3 783.1 671.4 771.5 700.0M769.1 1001.0 783.7 1042.9M771.5 700.0 902.3 695.6M808.3 917.3 793.9 899.4 782.5 893.9 772.5 880.0M947.2 856.5 929.5 846.1 905.4 845.7 862.6 840.1 835.7 854.7 824.6 857.1 807.2 855.9 792.0 861.6 772.5 880.0M773.6 935.6 780.8 946.6M773.6 935.6 808.3 917.3M800.1 472.1 787.7 473.1 784.6 473.3 783.0 473.2M800.1 472.1 799.9 449.8 788.9 440.3 786.2 443.3 787.3 468.5 786.3 471.5 783.0 473.2M916.4 1078.2 783.7 1042.9M783.7 1042.9 794.2 1061.6 800.7 1116.5M804.2 472.4 800.1 472.1M800.1 473.1 800.1 472.1M800.1 473.1 804.2 472.4M808.2 1198.0 806.8 1156.5 800.7 1116.5M902.3 695.6 898.4 565.2 911.2 563.3 913.5 560.9 910.4 549.0 909.2 533.9 905.9 531.5 866.1 532.1 864.1 529.5 862.3 514.7 836.8 490.2 835.1 476.9 832.8 472.9 827.0 470.3 804.2 472.4M815.2 928.6 808.3 917.3M879.4 51.9 967.6 125.9 978.2 142.8 978.6 153.6M892.3 379.9 892.6 393.1 894.2 396.2 931.8 423.3 977.4 451.2 1023.0 482.9 1029.3 484.8 1056.2 483.6M892.3 379.9 890.1 324.0 891.9 321.6 1067.5 314.3M902.3 695.6 913.0 694.4 919.7 690.9 950.8 655.0 959.4 649.9 1063.5 645.3M916.4 1078.2 911.4 934.7 907.5 880.3M1067.5 1104.4 1036.2 1104.7 916.4 1078.2M978.6 153.6 1042.0 151.1"/>
+<path class="m-major" d="M405.3 991.3 379.9 992.0 373.1 989.8 368.9 985.9 366.4 980.5 359.7 934.2 348.7 898.0 329.3 858.3 319.5 846.2 308.4 827.7 284.1 802.6 152.7 693.8 115.1 660.1 60.0 623.4 0.0 563.9M0.0 916.7 269.1 906.6 274.4 904.7 277.4 900.9 284.4 876.6 288.1 870.3 296.5 864.8 306.5 864.6 316.0 870.5 332.2 895.7 341.2 905.5 352.5 934.5 357.2 964.8 368.1 988.5M235.1 1281.2 238.1 1273.5 246.1 1216.5 265.9 1166.5 273.0 1135.0 292.2 1110.1 318.5 1084.9 325.4 1075.9 341.8 1046.0 363.4 995.0 368.1 988.5M297.3 1251.7 312.3 1243.3 322.7 1234.6 385.6 1165.1 420.6 1138.5 424.8 1133.1 428.0 1121.4 425.2 1038.0M385.1 1002.8 368.1 988.5M385.1 1002.8 396.1 1009.6 406.5 1011.0M405.7 1001.4 385.1 1002.8M405.3 991.3 405.7 1001.4M422.3 936.5 418.6 946.2 405.1 962.8 405.3 991.3M423.4 990.5 405.3 991.3M405.7 1001.4 406.5 1011.0M423.8 1000.6 405.7 1001.4M406.5 1011.0 410.1 1020.9M424.2 1010.2 406.5 1011.0M410.1 1020.9 425.2 1038.0M410.1 1020.9 424.5 1020.3M423.4 990.5 422.3 936.5M422.3 936.5 426.3 925.0 442.4 901.4M423.8 1000.6 423.4 990.5M424.2 1010.2 423.8 1000.6M545.8 1008.3 537.0 998.9 530.9 996.1 423.8 1000.6M424.5 1020.3 424.2 1010.2M425.2 1038.0 424.5 1020.3M424.5 1020.3 525.6 1016.3 545.8 1008.3M502.4 739.3 491.8 761.3 487.9 774.4 489.3 823.1 486.5 836.9 465.4 871.7 442.4 901.4M442.4 901.4 469.4 867.9 487.0 837.7 490.5 820.5 489.7 773.3 503.3 741.5M500.7 735.2 498.3 736.9 495.9 745.7 489.4 749.8 489.1 755.1M500.7 735.2 487.8 695.0 415.9 543.0 408.0 511.0 402.1 470.3 399.6 423.5 403.5 390.9 412.3 357.8 418.0 275.0 420.0 181.0 425.3 155.2 429.3 145.8 437.1 137.4 482.4 113.7 489.6 107.2 496.2 92.4 494.9 77.0M502.4 739.3 500.7 735.2M503.3 741.5 502.4 739.3M796.1 527.5 570.5 548.8 536.3 555.3 520.2 561.1 504.1 570.6 493.9 582.1 487.6 593.3 484.0 605.3 482.7 617.8 485.0 646.1 504.5 716.5 504.9 727.9 502.4 739.3M505.7 747.3 503.3 741.5M503.3 741.5 506.4 727.3 505.4 710.2 488.1 648.4 484.8 629.7 484.4 614.3 489.5 592.6 494.5 583.8 505.9 571.4 526.5 560.5 559.0 552.5 766.3 531.9 796.1 527.5M606.9 1032.2 578.7 1010.3 545.8 1008.3M606.9 1032.2 633.5 1055.6 654.7 1069.7 663.4 1078.3 700.7 1101.4 787.6 1178.0 824.4 1213.5 915.1 1284.7M606.9 1032.2 619.3 1027.1 642.3 1029.7 650.6 1018.9 669.8 1004.6 671.9 993.5 686.3 971.6M691.5 964.8 687.5 965.7 686.3 971.6M686.3 971.6 691.5 964.8M691.5 964.8 713.4 957.1 732.1 960.4 748.0 959.4 775.1 949.7 901.1 883.9 947.2 856.5M796.1 527.5 932.3 522.5 954.2 524.2 973.1 529.2 990.8 537.3 1044.3 574.0"/>
+          <g id="labels"></g>
+          <g id="pins"></g>
+        </svg>
+        <div class="mapctl">
+          <button type="button" id="zin" aria-label="Zoom in">+</button>
+          <button type="button" id="zout" aria-label="Zoom out">−</button>
+          <button type="button" id="zall" aria-label="Show all firms" style="font-size:.7rem">All</button>
+        </div>
+        <span class="maphint small">Drag to explore</span>
+        <span class="attrib">Map data © OpenStreetMap contributors</span>
+      </div>
+      <div class="mapside">
+        <ol class="places">
+          <li class="place c-pink" data-id="bca"><button type="button"><span class="n">1</span><span><b>BCA Architects &amp; Engineers</b><small>798 Cascadilla St, Ste C</small></span></button>
+            <div class="dir"><a href="https://www.google.com/maps/search/?api=1&amp;query=BCA%20Architects%20%26%20Engineers%2C%20798%20Cascadilla%20St%2C%20Ithaca%2C%20NY%2014850" target="_blank" rel="noopener">Directions ↗</a></div></li>
+          <li class="place c-green" data-id="holt"><button type="button"><span class="n">2</span><span><b>HOLT Architects</b><small>619 W State St</small></span></button>
+            <div class="dir"><a href="https://www.google.com/maps/search/?api=1&amp;query=HOLT%20Architects%2C%20619%20W%20State%20St%2C%20Ithaca%2C%20NY%2014850" target="_blank" rel="noopener">Directions ↗</a></div></li>
+          <li class="place c-orange" data-id="co"><button type="button"><span class="n">3</span><span><b>Chiang O’Brien Architects</b><small>217 N Aurora St</small></span></button>
+            <div class="dir"><a href="https://www.google.com/maps/search/?api=1&amp;query=Chiang%20O%27Brien%20Architects%2C%20217%20N%20Aurora%20St%2C%20Ithaca%2C%20NY%2014850" target="_blank" rel="noopener">Directions ↗</a></div></li>
+          <li class="place c-yellow" data-id="sed"><button type="button"><span class="n">4</span><span><b>Sedgwick Business Interiors</b><small>21 Dutch Mill Rd, north of town</small></span></button>
+            <div class="dir"><a href="https://www.google.com/maps/search/?api=1&amp;query=Sedgwick%20Business%20Interiors%2C%2021%20Dutch%20Mill%20Rd%2C%20Ithaca%2C%20NY%2014850" target="_blank" rel="noopener">Directions ↗</a></div></li>
+        </ol>
+        <a class="btn allmap" href="https://maps.app.goo.gl/nLYo1and4LAt24MfA" target="_blank" rel="noopener">All 4 in Google Maps ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WHEN ================= -->
+  <section id="when" class="wrap sec" aria-labelledby="when-h">
+    <div class="sec-head">
+      <h2 id="when-h">When</h2>
+      <p>Tentative times for each visit. Everything is TBD until the firms confirm.</p>
+    </div>
+    <p class="pick"><span class="tbd-pill">TBD</span><span>We’re going <b>one</b> of these two weeks. The schedule is the same either way.</span></p>
+    <div class="weeks">
+      <div class="week">
+        <div class="week-head"><b>Week 1</b><span>Nov 9–13</span></div>
+        <div class="days">
+          <div class="day"><div class="dh"><span>Mon</span><b>9</b></div><a class="ev c-pink" href="#bca"><span class="et">10 AM–<wbr>12 PM</span><span class="en">BCA</span></a><a class="ev c-green" href="#holt"><span class="et">1–3 PM</span><span class="en">HOLT</span></a></div>
+          <div class="day"><div class="dh"><span>Tue</span><b>10</b></div><div class="none">No visits</div></div>
+          <div class="day"><div class="dh"><span>Wed</span><b>11</b></div><a class="ev c-orange" href="#chiang-obrien"><span class="et">10 AM–<wbr>12 PM</span><span class="en">Chiang O’Brien</span></a></div>
+          <div class="day"><div class="dh"><span>Thu</span><b>12</b></div><div class="none">No visits</div></div>
+          <div class="day"><div class="dh"><span>Fri</span><b>13</b></div><a class="ev c-yellow" href="#sedgwick"><span class="et">Afternoon</span><span class="en">Sedgwick</span></a></div>
+        </div>
+      </div>
+      <span class="or-badge">or</span>
+      <div class="week">
+        <div class="week-head"><b>Week 2</b><span>Nov 16–20</span></div>
+        <div class="days">
+          <div class="day"><div class="dh"><span>Mon</span><b>16</b></div><a class="ev c-pink" href="#bca"><span class="et">10 AM–<wbr>12 PM</span><span class="en">BCA</span></a><a class="ev c-green" href="#holt"><span class="et">1–3 PM</span><span class="en">HOLT</span></a></div>
+          <div class="day"><div class="dh"><span>Tue</span><b>17</b></div><div class="none">No visits</div></div>
+          <div class="day"><div class="dh"><span>Wed</span><b>18</b></div><a class="ev c-orange" href="#chiang-obrien"><span class="et">10 AM–<wbr>12 PM</span><span class="en">Chiang O’Brien</span></a></div>
+          <div class="day"><div class="dh"><span>Thu</span><b>19</b></div><div class="none">No visits</div></div>
+          <div class="day"><div class="dh"><span>Fri</span><b>20</b></div><a class="ev c-yellow" href="#sedgwick"><span class="et">Afternoon</span><span class="en">Sedgwick</span></a></div>
+        </div>
+      </div>
+    </div>
+    <p class="when-note">All times are tentative and depend on each firm, so they may change. The final schedule goes on our Linktree and Instagram.</p>
+  </section>
+
+  <!-- ================= COST ================= -->
+  <section id="cost" class="wrap sec" aria-labelledby="cost-h">
+    <div class="sec-head">
+      <h2 id="cost-h">Cost</h2>
+      <p>One fee covers your visit.</p>
+    </div>
+    <div class="fees">
+      <div class="fee"><div><b>Returning IIDA members</b><p>Already in IIDA Cornell.</p></div><span class="price c-pink">$8</span></div>
+      <div class="fee"><div><b>Everyone else</b><p>Any design student is welcome.</p></div><span class="price c-yellow">$12</span></div>
+    </div>
+  </section>
+</main>
+
+<div class="join">
+  <canvas class="join-dots" id="joindots" aria-hidden="true"></canvas>
+  <div class="wrap join-in">
+    <div class="join-text">
+      <h2>Stay in the loop</h2>
+      <p>Sign-ups, the final schedule and future events go up on our Linktree and Instagram first.</p>
+    </div>
+    <div class="join-right">
+      <div class="join-btns">
+        <a class="btn" href="https://linktr.ee/IIDACornell" target="_blank" rel="noopener">Open our Linktree ↗</a>
+        <a class="btn ig" href="https://www.instagram.com/iidacornell" target="_blank" rel="noopener">Instagram @iidacornell ↗</a>
+      </div>
+      <figure class="qrcard">
+        <svg role="img" aria-label="QR code linking to linktr.ee/IIDACornell" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" class="qr"><path class="qrline" stroke="#141414" d="M0 0.5h7m2 0h1m1 0h1m1 0h2m2 0h2m3 0h7m-29 1h1m5 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m3 0h3m2 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m3 0h3m2 0h1m2 0h1m3 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h4m1 0h2m3 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m1 0h2m2 0h1m1 0h3m2 0h1m2 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-20 1h2m1 0h3m2 0h1m-17 1h1m2 0h1m1 0h1m1 0h1m1 0h6m1 0h1m2 0h2m1 0h2m1 0h1m-27 1h1m2 0h3m1 0h1m1 0h1m1 0h2m3 0h3m4 0h2m2 0h2m-29 1h1m3 0h4m1 0h4m1 0h1m1 0h1m4 0h1m3 0h2m1 0h1m-29 1h4m1 0h1m1 0h3m2 0h4m1 0h5m1 0h1m1 0h1m1 0h2m-29 1h2m3 0h3m1 0h2m2 0h1m1 0h3m2 0h1m2 0h1m1 0h2m1 0h1m-28 1h4m2 0h2m4 0h2m1 0h2m4 0h1m1 0h1m1 0h1m1 0h1m-29 1h1m1 0h7m2 0h3m3 0h2m2 0h2m1 0h1m2 0h2m-29 1h1m6 0h1m3 0h5m1 0h1m2 0h1m2 0h1m1 0h1m2 0h1m-28 1h1m2 0h5m2 0h1m1 0h1m2 0h1m1 0h1m1 0h2m2 0h1m2 0h1m-28 1h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h1m1 0h1m3 0h1m3 0h4m2 0h1m-27 1h3m1 0h1m1 0h1m2 0h2m1 0h2m1 0h2m4 0h1m1 0h1m2 0h1m-27 1h2m4 0h1m1 0h1m2 0h5m1 0h1m5 0h1m2 0h1m-29 1h2m1 0h1m1 0h2m3 0h3m4 0h1m1 0h10m-21 1h1m2 0h2m1 0h3m2 0h2m3 0h1m1 0h1m1 0h1m-29 1h7m3 0h1m3 0h4m1 0h2m1 0h1m1 0h1m3 0h1m-29 1h1m5 0h1m2 0h1m2 0h3m2 0h1m1 0h2m3 0h2m2 0h1m-29 1h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h3m2 0h7m2 0h1m-28 1h1m1 0h3m1 0h1m2 0h1m3 0h2m1 0h1m1 0h1m4 0h1m1 0h1m1 0h1m-28 1h1m1 0h3m1 0h1m3 0h2m2 0h1m1 0h1m2 0h3m3 0h1m1 0h2m-29 1h1m5 0h1m1 0h1m8 0h1m1 0h2m2 0h1m1 0h1m1 0h2m-29 1h7m5 0h1m2 0h1m1 0h2m1 0h3m1 0h4"/></svg>
+
+        <figcaption>Scan for our Linktree</figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+
+<footer class="wrap">
+  <span>IIDA Cornell · Fall 2026 · <a href="https://www.instagram.com/iidacornell" target="_blank" rel="noopener">@iidacornell</a></span>
+  <span>Project photos from each firm’s website · Map data © OpenStreetMap contributors</span>
+</footer>
+
+<script>
+(function(){
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const COLORS = ['#F49AC1','#1E8A47','#FF6B2C','#F7C618'];
+
+/* ---------- interactive dot fields (hero + bottom) ---------- */
+function dotField(cv,area){
+  const ctx=cv.getContext('2d');let W=0,H=0,dots=[],mouse={x:-999,y:-999},running=false,visible=true;
+  function mk(x,y,burst){const a=Math.random()*6.283,s=burst?2+Math.random()*4:.1+Math.random()*.2;
+    return {x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:2.5+Math.random()*4,c:COLORS[(Math.random()*4)|0],life:burst?90:Infinity};}
+  function size(){const dpr=Math.min(2,devicePixelRatio||1);W=area.clientWidth;H=area.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+    const n=Math.round(Math.min(140,W*H/7500));dots=[];for(let i=0;i<n;i++)dots.push(mk(Math.random()*W,Math.random()*H));draw();}
+  function draw(){ctx.clearRect(0,0,W,H);for(const d of dots){ctx.globalAlpha=d.life<Infinity?Math.max(0,d.life/90):1;ctx.fillStyle=d.c;ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,6.283);ctx.fill();}ctx.globalAlpha=1;}
+  function step(){
+    if(!visible){running=false;return;}
+    for(const d of dots){const dx=d.x-mouse.x,dy=d.y-mouse.y,dist=Math.hypot(dx,dy);
+      if(dist<120&&dist>0){const f=(120-dist)/120*1.5;d.vx+=dx/dist*f;d.vy+=dy/dist*f;}
+      if(d.life<Infinity){d.life--;d.vx*=.96;d.vy*=.96;}
+      else{d.vx+=(Math.random()-.5)*.03;d.vy+=(Math.random()-.5)*.03;d.vx*=.94;d.vy*=.94;if(Math.hypot(d.vx,d.vy)<.12){d.vx+=(Math.random()-.5)*.1;d.vy+=(Math.random()-.5)*.1;}}
+      d.x+=d.vx;d.y+=d.vy;if(d.x<-10)d.x=W+10;if(d.x>W+10)d.x=-10;if(d.y<-10)d.y=H+10;if(d.y>H+10)d.y=-10;}
+    dots=dots.filter(d=>d.life>0);draw();requestAnimationFrame(step);}
+  function start(){if(!running&&!reduce){running=true;requestAnimationFrame(step);}}
+  size();addEventListener('resize',()=>{clearTimeout(size.t);size.t=setTimeout(size,150)});
+  if(reduce)return;
+  area.addEventListener('pointermove',e=>{const r=area.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;});
+  area.addEventListener('pointerleave',()=>{mouse.x=mouse.y=-999});
+  area.addEventListener('click',e=>{if(e.target.closest('a,button'))return;const r=area.getBoundingClientRect();for(let i=0;i<18;i++)dots.push(mk(e.clientX-r.left,e.clientY-r.top,true));});
+  new IntersectionObserver(es=>{visible=es[0].isIntersecting;if(visible)start();}).observe(area);
+  start();
+}
+const heroCv=document.getElementById('confetti');dotField(heroCv,heroCv.parentElement);
+const joinCv=document.getElementById('joindots');dotField(joinCv,joinCv.parentElement);
+
+/* ---------- galleries ---------- */
+document.querySelectorAll('[data-gallery]').forEach(g=>{
+  const slides=[...g.querySelectorAll('.slide')],cap=g.querySelector('.cap'),ctl=g.querySelector('.g-ctrl'),name=g.closest('.firm').dataset.name;
+  let i=0,timer=null,visible=false;
+  const mkBtn=(cls,txt,label)=>{const b=document.createElement('button');b.type='button';b.className=cls;b.textContent=txt;b.setAttribute('aria-label',label);ctl.appendChild(b);return b;};
+  const prev=mkBtn('g-arrow','←',`Previous ${name} photo`);
+  const dotsEls=slides.map((s,k)=>{const b=mkBtn('g-dot','',`${name} photo ${k+1}`);b.onclick=()=>{go(k);restart();};return b;});
+  const next=mkBtn('g-arrow','→',`Next ${name} photo`);
+  prev.onclick=()=>{go(i-1);restart();};next.onclick=()=>{go(i+1);restart();};
+  function go(k){i=(k+slides.length)%slides.length;slides.forEach((s,n)=>s.classList.toggle('on',n===i));dotsEls.forEach((d,n)=>d.setAttribute('aria-current',n===i));cap.innerHTML=slides[i].dataset.cap;}
+  function restart(){clearInterval(timer);if(visible)timer=setInterval(()=>go(i+1),3800);}
+  g.querySelector('.frame').addEventListener('click',()=>{go(i+1);restart();});
+    new IntersectionObserver(es=>{visible=es[0].isIntersecting;restart();},{threshold:.15}).observe(g);
+  go(0);
+});
+
+/* ---------- matcher ---------- */
+const chips=[...document.querySelectorAll('.chip')],firms=[...document.querySelectorAll('.firm')],result=document.getElementById('result'),clear=document.getElementById('clear');
+function match(){
+  const on=chips.filter(c=>c.getAttribute('aria-pressed')==='true').map(c=>c.dataset.tag);
+  clear.hidden=!on.length;
+  if(!on.length){firms.forEach(f=>f.classList.remove('dim','hit'));result.textContent='Pick a few and we’ll suggest a firm.';return;}
+  const scored=firms.map(f=>({f,s:on.filter(t=>f.dataset.tags.split(' ').includes(t)).length}));
+  const best=Math.max(...scored.map(x=>x.s));
+  scored.forEach(({f,s})=>{f.classList.toggle('hit',s===best&&best>0);f.classList.toggle('dim',s===0);});
+  const top=scored.filter(x=>x.s===best&&best>0);
+  if(!top.length){result.textContent='Nothing lines up exactly, but any of the four is worth seeing.';return;}
+  result.innerHTML='Try '+top.map(({f})=>`<a class="${[...f.classList].find(c=>c.startsWith('c-'))}" href="#${f.id}">${f.dataset.name}</a>`).join(' ');
+}
+chips.forEach(c=>c.addEventListener('click',()=>{c.setAttribute('aria-pressed',c.getAttribute('aria-pressed')!=='true');match();}));
+clear.addEventListener('click',()=>{chips.forEach(c=>c.setAttribute('aria-pressed','false'));match();});
+
+/* ---------- map ---------- */
+const svg=document.getElementById('mapsvg'),box=document.getElementById('mapbox'),NS='http://www.w3.org/2000/svg';
+const FIRMS=[{id:'bca',n:1,x:404.5,y:940.6,c:'c-pink'},{id:'holt',n:2,x:414.2,y:1012.9,c:'c-green'},{id:'co',n:3,x:529.7,y:989.9,c:'c-orange'},{id:'sed',n:4,x:742.9,y:243.2,c:'c-yellow'}];
+const LABELS=[{t:'Cayuga Lake',x:330,y:560,cls:'water',rot:-62},{t:'Cornell',x:650,y:905},{t:'The Commons',x:492,y:1030},{t:'Ithaca College',x:540,y:1200},{t:'Airport',x:840,y:430},{t:'Lansing',x:700,y:190},{t:'Inlet',x:372,y:1100,cls:'water',rot:-80}];
+function aspect(){const r=box.getBoundingClientRect();return r.height/r.width||1.25;}
+const homeView=()=>({cx:590,cy:645,w:Math.max(620,1010/aspect())});
+let view={cx:590,cy:645,w:1010},anim=null;
+const pinEls={},labelEls=[];
+LABELS.forEach(l=>{const t=document.createElementNS(NS,'text');t.textContent=l.t;t.setAttribute('class','m-label'+(l.cls?' '+l.cls:''));t.setAttribute('text-anchor','middle');t.setAttribute('font-size','12');document.getElementById('labels').appendChild(t);labelEls.push({el:t,...l});});
+FIRMS.forEach(f=>{const g=document.createElementNS(NS,'g');g.setAttribute('class','pin '+f.c);
+  g.innerHTML=`<circle class="ring" r="17"/><circle class="body" r="16"/><text>${f.n}</text>`;
+  g.addEventListener('click',e=>{e.stopPropagation();select(f.id);});document.getElementById('pins').appendChild(g);pinEls[f.id]=g;});
+function render(){const h=view.w*aspect();svg.setAttribute('viewBox',`${view.cx-view.w/2} ${view.cy-h/2} ${view.w} ${h}`);
+  const k=view.w/Math.max(300,box.clientWidth);
+  FIRMS.forEach(f=>pinEls[f.id].setAttribute('transform',`translate(${f.x} ${f.y}) scale(${k})`));
+  labelEls.forEach(l=>l.el.setAttribute('transform',`translate(${l.x} ${l.y}) rotate(${l.rot||0}) scale(${k})`));}
+function clamp(){view.w=Math.min(1050,Math.max(110,view.w));view.cx=Math.min(1000,Math.max(60,view.cx));view.cy=Math.min(1300,Math.max(40,view.cy));}
+function animateTo(t){cancelAnimationFrame(anim);if(reduce){view={...t};clamp();render();return;}
+  const s={...view},t0=performance.now(),D=700;
+  (function f(now){const p=Math.min(1,(now-t0)/D),e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+    view={cx:s.cx+(t.cx-s.cx)*e,cy:s.cy+(t.cy-s.cy)*e,w:s.w*Math.pow(t.w/s.w,e)};render();if(p<1)anim=requestAnimationFrame(f);})(t0);}
+const places=[...document.querySelectorAll('.place')];
+function select(id){const f=FIRMS.find(x=>x.id===id);
+  places.forEach(p=>p.classList.toggle('on',p.dataset.id===id));Object.entries(pinEls).forEach(([k,g])=>g.classList.toggle('on',k===id));
+  animateTo(id==='sed'?{cx:f.x,cy:f.y,w:360}:{cx:(f.x+470)/2,cy:(f.y+975)/2,w:340});}
+places.forEach(p=>p.querySelector('button').addEventListener('click',()=>select(p.dataset.id)));
+document.getElementById('zin').onclick=()=>animateTo({...view,w:Math.max(110,view.w*.65)});
+document.getElementById('zout').onclick=()=>animateTo({...view,w:Math.min(1050,view.w/.65)});
+document.getElementById('zall').onclick=()=>{places.forEach(p=>p.classList.remove('on'));Object.values(pinEls).forEach(g=>g.classList.remove('on'));animateTo(homeView());};
+let drag=null;
+box.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;drag={x:e.clientX,y:e.clientY,cx:view.cx,cy:view.cy};box.setPointerCapture(e.pointerId);box.classList.add('dragging');cancelAnimationFrame(anim);});
+box.addEventListener('pointermove',e=>{if(!drag)return;const s=view.w/box.clientWidth;view.cx=drag.cx-(e.clientX-drag.x)*s;view.cy=drag.cy-(e.clientY-drag.y)*s;clamp();render();});
+const end=()=>{drag=null;box.classList.remove('dragging');};box.addEventListener('pointerup',end);box.addEventListener('pointercancel',end);
+addEventListener('resize',render);view=homeView();render();
+
+})();
+</script>
+
+</body>
+</html>
